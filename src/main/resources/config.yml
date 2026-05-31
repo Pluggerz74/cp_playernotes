@@ -3,6 +3,9 @@
 
 debug: false
 
+hooks:
+  placeholderapi: true
+
 join-alerts:
   enabled: true
   minimum-priority: HIGH

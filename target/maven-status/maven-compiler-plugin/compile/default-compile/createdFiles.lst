@@ -1,5 +1,6 @@
 de\codingplugs\playernotes\gui\NotePrioritySelectGui$ActionType.class
 de\codingplugs\playernotes\gui\PlayerNotesGui.class
+de\codingplugs\playernotes\hook\PlaceholderApiHook$CachedSnapshot.class
 de\codingplugs\playernotes\gui\NoteTypeSelectGui$ActionType.class
 de\codingplugs\playernotes\listener\StaffJoinListener.class
 de\codingplugs\playernotes\permission\Permissions.class
@@ -10,6 +11,7 @@ de\codingplugs\playernotes\command\ListSubCommand.class
 de\codingplugs\playernotes\database\package-info.class
 de\codingplugs\playernotes\gui\PlayerNotesGui$ActionType.class
 de\codingplugs\playernotes\listener\ChatInputListener.class
+de\codingplugs\playernotes\hook\PlaceholderApiHook.class
 de\codingplugs\playernotes\command\CommandSupport$StaffIdentity.class
 de\codingplugs\playernotes\gui\NoteDetailGui.class
 de\codingplugs\playernotes\database\SqlNoteRepository$SqlSupplier.class
@@ -30,6 +32,7 @@ de\codingplugs\playernotes\service\ChatInputService.class
 de\codingplugs\playernotes\database\NoteRepository.class
 de\codingplugs\playernotes\gui\GuiItemBuilder$1.class
 de\codingplugs\playernotes\gui\NotePrioritySelectGui.class
+de\codingplugs\playernotes\hook\HookManager.class
 de\codingplugs\playernotes\note\package-info.class
 de\codingplugs\playernotes\config\ConfigManager.class
 de\codingplugs\playernotes\scheduler\package-info.class

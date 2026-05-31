@@ -16,6 +16,7 @@ import de.codingplugs.playernotes.database.SQLiteDatabaseProvider;
 import de.codingplugs.playernotes.database.SqlNoteRepository;
 import de.codingplugs.playernotes.gui.GuiClickListener;
 import de.codingplugs.playernotes.gui.GuiManager;
+import de.codingplugs.playernotes.hook.HookManager;
 import de.codingplugs.playernotes.listener.ChatInputListener;
 import de.codingplugs.playernotes.listener.StaffJoinListener;
 import de.codingplugs.playernotes.service.ChatInputService;
@@ -38,6 +39,7 @@ public final class PlayerNotesPlugin extends JavaPlugin {
     private NoteRepository noteRepository;
     private GuiManager guiManager;
     private ChatInputService chatInputService;
+    private HookManager hookManager;
 
     @Override
     public void onEnable() {
@@ -57,12 +59,16 @@ public final class PlayerNotesPlugin extends JavaPlugin {
 
         registerListeners();
         registerCommands();
+        registerHooks();
 
         getLogger().info("PlayerNotes enabled.");
     }
 
     @Override
     public void onDisable() {
+        if (hookManager != null) {
+            hookManager.shutdown();
+        }
         if (chatInputService != null) {
             chatInputService.shutdown();
         }
@@ -73,6 +79,9 @@ public final class PlayerNotesPlugin extends JavaPlugin {
     public void reloadPlugin() {
         configManager.reload();
         messageService.reload();
+        if (hookManager != null) {
+            hookManager.reload();
+        }
     }
 
     public ConfigManager configManager() {
@@ -147,6 +156,11 @@ public final class PlayerNotesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new GuiClickListener(guiManager, chatInputService), this);
         getServer().getPluginManager().registerEvents(new ChatInputListener(this, chatInputService), this);
         getServer().getPluginManager().registerEvents(new StaffJoinListener(joinAlertService), this);
+    }
+
+    private void registerHooks() {
+        hookManager = new HookManager(this);
+        hookManager.registerHooks();
     }
 
     public void logSevere(String message, Throwable throwable) {

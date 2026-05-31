@@ -6,6 +6,9 @@ description: Player notes for staff and administrators
 authors:
   - CodingPlugs
 
+softdepend:
+  - PlaceholderAPI
+
 commands:
   pn:
     description: PlayerNotes commands

@@ -21,7 +21,9 @@ C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\pla
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\gui\NotePrioritySelectGui.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\gui\NoteTypeSelectGui.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\gui\PlayerNotesGui.java
+C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\hook\HookManager.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\hook\package-info.java
+C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\hook\PlaceholderApiHook.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\listener\ChatInputListener.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\listener\package-info.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\listener\StaffJoinListener.java
