@@ -10,16 +10,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.inventory.InventoryHolder;
 
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 public final class GuiClickListener implements Listener {
-
-    private static final DateTimeFormatter DATE_TIME = DateTimeFormatter
-            .ofPattern("yyyy-MM-dd HH:mm")
-            .withZone(ZoneId.systemDefault());
 
     private final GuiManager guiManager;
     private final ChatInputService chatInputService;
@@ -31,10 +26,15 @@ public final class GuiClickListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (!(event.getInventory().getHolder() instanceof PlayerNotesGui menu)) {
-            return;
+        InventoryHolder holder = event.getInventory().getHolder();
+        if (holder instanceof PlayerNotesGui menu) {
+            handlePlayerNotesClick(event, menu);
+        } else if (holder instanceof NoteDetailGui detail) {
+            handleNoteDetailClick(event, detail);
         }
+    }
 
+    private void handlePlayerNotesClick(InventoryClickEvent event, PlayerNotesGui menu) {
         event.setCancelled(true);
 
         if (!(event.getWhoClicked() instanceof Player player)) {
@@ -58,6 +58,35 @@ public final class GuiClickListener implements Listener {
         }
     }
 
+    private void handleNoteDetailClick(InventoryClickEvent event, NoteDetailGui detail) {
+        event.setCancelled(true);
+
+        if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+
+        if (event.getClickedInventory() == null || event.getClickedInventory().getHolder() != detail) {
+            return;
+        }
+
+        NoteDetailGui.SlotAction action = detail.actionForSlot(event.getSlot());
+        if (action == null) {
+            return;
+        }
+
+        switch (action.type()) {
+            case CLOSE -> player.closeInventory();
+            case BACK -> guiManager.reopenPlayerNotes(
+                    player,
+                    detail.targetUuid(),
+                    detail.targetName(),
+                    detail.page()
+            );
+            case ARCHIVE -> handleArchive(player, detail);
+            case DELETE -> handleDelete(player, detail);
+        }
+    }
+
     private void handleAddNote(Player player, PlayerNotesGui menu) {
         if (!CommandSupport.hasPermission(player, Permissions.ADD)) {
             guiManager.messages().send(player, "command.no-permission");
@@ -66,24 +95,6 @@ public final class GuiClickListener implements Listener {
 
         player.closeInventory();
         chatInputService.startInput(player, menu.targetUuid(), menu.targetName());
-    }
-
-    @EventHandler
-    public void onInventoryDrag(InventoryDragEvent event) {
-        if (event.getInventory().getHolder() instanceof PlayerNotesGui) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onInventoryClose(InventoryCloseEvent event) {
-        if (!(event.getPlayer() instanceof Player player)) {
-            return;
-        }
-
-        if (event.getInventory().getHolder() instanceof PlayerNotesGui) {
-            guiManager.closeMenu(player.getUniqueId());
-        }
     }
 
     private void handleNoteClick(Player player, PlayerNotesGui menu, Long noteId) {
@@ -97,14 +108,43 @@ public final class GuiClickListener implements Listener {
             return;
         }
 
-        guiManager.messages().send(player, "gui.note-detail", Map.of(
-                "id", String.valueOf(note.getId()),
-                "player", menu.targetName(),
-                "type", note.getType().name(),
-                "priority", note.getPriority().name(),
-                "content", note.getContent(),
-                "staff", note.getStaffName(),
-                "date", DATE_TIME.format(note.getCreatedAt())
-        ));
+        guiManager.openNoteDetail(player, note, menu.targetUuid(), menu.targetName(), menu.page());
+    }
+
+    private void handleArchive(Player player, NoteDetailGui detail) {
+        if (!CommandSupport.hasPermission(player, Permissions.ARCHIVE)) {
+            guiManager.messages().send(player, "command.no-permission");
+            return;
+        }
+
+        guiManager.archiveNoteFromGui(player, detail);
+    }
+
+    private void handleDelete(Player player, NoteDetailGui detail) {
+        if (!CommandSupport.hasPermission(player, Permissions.REMOVE)) {
+            guiManager.messages().send(player, "command.no-permission");
+            return;
+        }
+
+        guiManager.deleteNoteFromGui(player, detail);
+    }
+
+    @EventHandler
+    public void onInventoryDrag(InventoryDragEvent event) {
+        InventoryHolder holder = event.getInventory().getHolder();
+        if (holder instanceof PlayerNotesGui || holder instanceof NoteDetailGui) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        if (!(event.getPlayer() instanceof Player player)) {
+            return;
+        }
+
+        if (event.getInventory().getHolder() instanceof PlayerNotesGui) {
+            guiManager.closeMenu(player.getUniqueId());
+        }
     }
 }

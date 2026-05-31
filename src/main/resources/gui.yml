@@ -68,3 +68,40 @@ notes-menu:
     next-name: "<gray><bold>Next</bold></gray>"
     next-lore:
       - "<dark_gray>Coming soon</dark_gray>"
+
+detail-menu:
+  title: "<gradient:#ffffff:#60a5fa><bold>Note Details</bold></gradient> <dark_gray>·</dark_gray> <gray>#<id></gray>"
+  size: 27
+
+  slots:
+    info: 10
+    archive: 12
+    delete: 14
+    back: 16
+    close: 22
+
+  labels:
+    info-name: "<white><bold>Note #<id></bold></white>"
+    info-lore:
+      - "<gray>Type: <white><type></white></gray>"
+      - "<gray>Priority: <white><priority></white></gray>"
+      - "<gray>By: <white><staff></white></gray>"
+      - "<gray>Created: <white><date></white></gray>"
+      - ""
+      - "<white><content></white>"
+    archive-name: "<gold><bold>Archive Note</bold></gold>"
+    archive-lore:
+      - "<gray>Hide this note from active list</gray>"
+      - ""
+      - "<yellow>Click to archive</yellow>"
+    delete-name: "<red><bold>Delete Note</bold></red>"
+    delete-lore:
+      - "<gray>Permanently remove this note</gray>"
+      - ""
+      - "<red>Click to delete</red>"
+    back-name: "<aqua><bold>Back</bold></aqua>"
+    back-lore:
+      - "<gray>Return to player notes</gray>"
+    close-name: "<red><bold>Close</bold></red>"
+    close-lore:
+      - "<gray>Close this menu</gray>"

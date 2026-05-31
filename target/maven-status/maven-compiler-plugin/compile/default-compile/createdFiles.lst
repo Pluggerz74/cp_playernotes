@@ -25,8 +25,10 @@ de\codingplugs\playernotes\service\MessageService.class
 de\codingplugs\playernotes\command\RemoveSubCommand.class
 de\codingplugs\playernotes\util\NoteFormatter.class
 de\codingplugs\playernotes\command\CommandSupport$StaffIdentity.class
+de\codingplugs\playernotes\gui\NoteDetailGui.class
 de\codingplugs\playernotes\database\SqlNoteRepository$SqlSupplier.class
 de\codingplugs\playernotes\gui\GuiClickListener$1.class
+de\codingplugs\playernotes\gui\NoteDetailGui$SlotAction.class
 de\codingplugs\playernotes\command\SubCommand.class
 de\codingplugs\playernotes\gui\GuiItemBuilder.class
 de\codingplugs\playernotes\command\AddSubCommand.class
@@ -34,6 +36,7 @@ de\codingplugs\playernotes\database\DatabaseProvider.class
 de\codingplugs\playernotes\util\package-info.class
 de\codingplugs\playernotes\command\ReloadSubCommand.class
 de\codingplugs\playernotes\command\ViewPlayerCommand.class
+de\codingplugs\playernotes\gui\NoteDetailGui$ActionType.class
 de\codingplugs\playernotes\gui\GuiClickListener.class
 de\codingplugs\playernotes\gui\PlayerNotesGui$SlotAction.class
 de\codingplugs\playernotes\command\CommandSupport.class

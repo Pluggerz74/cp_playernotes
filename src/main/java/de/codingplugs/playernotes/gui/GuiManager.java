@@ -31,6 +31,12 @@ public final class GuiManager {
             46, 48, 50, 52
     );
 
+    private static final Set<Integer> DETAIL_ACCENT_SLOTS = Set.of(
+            1, 3, 4, 5, 7,
+            9, 11, 13, 15, 17,
+            21, 23
+    );
+
     private final PlayerNotesPlugin plugin;
     private final MessageService messages;
     private final GuiItemBuilder itemBuilder;
@@ -78,6 +84,75 @@ public final class GuiManager {
 
     public MessageService messages() {
         return messages;
+    }
+
+    public void openNoteDetail(Player viewer, PlayerNote note, UUID targetUuid, String targetName, int page) {
+        NoteDetailGui detail = new NoteDetailGui(note, targetUuid, targetName, page);
+        Inventory inventory = Bukkit.createInventory(
+                detail,
+                itemBuilder.detailInventorySize(),
+                itemBuilder.detailTitleComponent(note.getId())
+        );
+        detail.bindInventory(inventory);
+        populateDetailInventory(detail, inventory, note);
+        viewer.openInventory(inventory);
+    }
+
+    public void reopenPlayerNotes(Player viewer, UUID targetUuid, String targetName, int page) {
+        plugin.notes().findByTarget(targetUuid, false).whenComplete((notes, error) ->
+                CommandSupport.runSync(plugin, () -> {
+                    if (!viewer.isOnline()) {
+                        return;
+                    }
+
+                    if (error != null) {
+                        plugin.logSevere("Failed to reload notes for " + targetName, error);
+                        messages.send(viewer, "command.error");
+                        return;
+                    }
+
+                    openPlayerNotes(viewer, targetUuid, targetName, notes, page);
+                }));
+    }
+
+    public void archiveNoteFromGui(Player viewer, NoteDetailGui detail) {
+        long noteId = detail.note().getId();
+        plugin.notes().archiveNote(noteId).whenComplete((archived, error) ->
+                CommandSupport.deliverFeedback(plugin, viewer, messages, () -> {
+                    if (error != null) {
+                        plugin.logSevere("Failed to archive note #" + noteId, error);
+                        messages.send(viewer, "command.database-error");
+                        return;
+                    }
+
+                    if (archived == null || !archived) {
+                        messages.send(viewer, "command.note-not-found", Map.of("id", String.valueOf(noteId)));
+                        return;
+                    }
+
+                    messages.send(viewer, "command.archive-success", Map.of("id", String.valueOf(noteId)));
+                    reopenPlayerNotes(viewer, detail.targetUuid(), detail.targetName(), detail.page());
+                }));
+    }
+
+    public void deleteNoteFromGui(Player viewer, NoteDetailGui detail) {
+        long noteId = detail.note().getId();
+        plugin.notes().deleteNote(noteId).whenComplete((removed, error) ->
+                CommandSupport.deliverFeedback(plugin, viewer, messages, () -> {
+                    if (error != null) {
+                        plugin.logSevere("Failed to delete note #" + noteId, error);
+                        messages.send(viewer, "command.database-error");
+                        return;
+                    }
+
+                    if (removed == null || !removed) {
+                        messages.send(viewer, "command.note-not-found", Map.of("id", String.valueOf(noteId)));
+                        return;
+                    }
+
+                    messages.send(viewer, "command.remove-success", Map.of("id", String.valueOf(noteId)));
+                    reopenPlayerNotes(viewer, detail.targetUuid(), detail.targetName(), detail.page());
+                }));
     }
 
     private PlayerNotesGui buildMenu(UUID targetUuid, String targetName, List<PlayerNote> notes, int page) {
@@ -176,5 +251,60 @@ public final class GuiManager {
         int column = slot % 9;
         int lastRow = (size / 9) - 1;
         return row == 0 || row == lastRow || column == 0 || column == 8;
+    }
+
+    private void populateDetailInventory(NoteDetailGui detail, Inventory inventory, PlayerNote note) {
+        Set<Integer> interactiveSlots = new HashSet<>();
+
+        int infoSlot = itemBuilder.detailSlot("info", 10);
+        int archiveSlot = itemBuilder.detailSlot("archive", 12);
+        int deleteSlot = itemBuilder.detailSlot("delete", 14);
+        int backSlot = itemBuilder.detailSlot("back", 16);
+        int closeSlot = itemBuilder.detailSlot("close", 22);
+
+        interactiveSlots.add(infoSlot);
+        interactiveSlots.add(archiveSlot);
+        interactiveSlots.add(deleteSlot);
+        interactiveSlots.add(backSlot);
+        interactiveSlots.add(closeSlot);
+
+        fillDetailFrame(inventory, interactiveSlots);
+
+        String formattedDate = DATE_TIME.format(note.getCreatedAt());
+        inventory.setItem(infoSlot, itemBuilder.detailInfoItem(
+                note.getId(),
+                note.getType().name(),
+                note.getPriority().name(),
+                note.getContent(),
+                formattedDate,
+                note.getStaffName()
+        ));
+        inventory.setItem(archiveSlot, itemBuilder.detailArchiveButton());
+        inventory.setItem(deleteSlot, itemBuilder.detailDeleteButton());
+        inventory.setItem(backSlot, itemBuilder.detailBackButton());
+        inventory.setItem(closeSlot, itemBuilder.detailCloseButton());
+
+        detail.registerAction(archiveSlot, new NoteDetailGui.SlotAction(NoteDetailGui.ActionType.ARCHIVE));
+        detail.registerAction(deleteSlot, new NoteDetailGui.SlotAction(NoteDetailGui.ActionType.DELETE));
+        detail.registerAction(backSlot, new NoteDetailGui.SlotAction(NoteDetailGui.ActionType.BACK));
+        detail.registerAction(closeSlot, new NoteDetailGui.SlotAction(NoteDetailGui.ActionType.CLOSE));
+    }
+
+    private void fillDetailFrame(Inventory inventory, Set<Integer> interactiveSlots) {
+        int size = inventory.getSize();
+
+        for (int slot = 0; slot < size; slot++) {
+            if (interactiveSlots.contains(slot)) {
+                continue;
+            }
+
+            if (isBorder(slot, size)) {
+                inventory.setItem(slot, itemBuilder.borderPane());
+            } else if (DETAIL_ACCENT_SLOTS.contains(slot)) {
+                inventory.setItem(slot, itemBuilder.accentPane());
+            } else {
+                inventory.setItem(slot, itemBuilder.innerPane());
+            }
+        }
     }
 }

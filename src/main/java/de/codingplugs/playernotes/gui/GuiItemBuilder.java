@@ -165,6 +165,135 @@ public final class GuiItemBuilder {
         return size;
     }
 
+    public Component detailTitleComponent(long noteId) {
+        String template = gui().getString(
+                "detail-menu.title",
+                "<gradient:#ffffff:#60a5fa><bold>Note Details</bold></gradient> <dark_gray>·</dark_gray> <gray>#<id></gray>"
+        );
+        return MINI_MESSAGE.deserialize(template, TagResolver.resolver(Placeholder.unparsed("id", String.valueOf(noteId))));
+    }
+
+    public int detailInventorySize() {
+        int size = gui().getInt("detail-menu.size", 27);
+        if (size % 9 != 0 || size < 9 || size > 54) {
+            return 27;
+        }
+        return size;
+    }
+
+    public int detailSlot(String path, int fallback) {
+        return gui().getInt("detail-menu.slots." + path, fallback);
+    }
+
+    public ItemStack detailInfoItem(long id, String type, String priority, String content, String date, String staff) {
+        return labeledItemFromSection(
+                "detail-menu",
+                detailPriorityMaterial(priority),
+                "labels.info-name",
+                "labels.info-lore",
+                Map.of(
+                        "id", String.valueOf(id),
+                        "type", type,
+                        "priority", priority,
+                        "content", content,
+                        "date", date,
+                        "staff", staff
+                )
+        );
+    }
+
+    public ItemStack detailArchiveButton() {
+        return labeledItemFromSection(
+                "detail-menu",
+                Material.CHEST,
+                "labels.archive-name",
+                "labels.archive-lore",
+                Collections.emptyMap()
+        );
+    }
+
+    public ItemStack detailDeleteButton() {
+        return labeledItemFromSection(
+                "detail-menu",
+                Material.RED_DYE,
+                "labels.delete-name",
+                "labels.delete-lore",
+                Collections.emptyMap()
+        );
+    }
+
+    public ItemStack detailBackButton() {
+        return labeledItemFromSection(
+                "detail-menu",
+                Material.ARROW,
+                "labels.back-name",
+                "labels.back-lore",
+                Collections.emptyMap()
+        );
+    }
+
+    public ItemStack detailCloseButton() {
+        return labeledItemFromSection(
+                "detail-menu",
+                getMaterial("materials.close", Material.BARRIER),
+                "labels.close-name",
+                "labels.close-lore",
+                Collections.emptyMap()
+        );
+    }
+
+    public Material detailPriorityMaterial(String priorityName) {
+        if ("CRITICAL".equalsIgnoreCase(priorityName)) {
+            return Material.RED_DYE;
+        }
+        if ("HIGH".equalsIgnoreCase(priorityName)) {
+            return Material.ORANGE_DYE;
+        }
+        return Material.PAPER;
+    }
+
+    private ItemStack labeledItemFromSection(
+            String section,
+            Material material,
+            String namePath,
+            String lorePath,
+            Map<String, String> placeholders
+    ) {
+        ItemStack item = item(material);
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.displayName(textFromSection(section, namePath, placeholders));
+            meta.lore(loreFromSection(section, lorePath, placeholders));
+            item.setItemMeta(meta);
+        }
+        return item;
+    }
+
+    private Component textFromSection(String section, String path, Map<String, String> placeholders) {
+        String template = gui().getString(section + "." + path, "");
+        if (template.isBlank()) {
+            return Component.empty();
+        }
+        return MINI_MESSAGE.deserialize(template, tagResolver(placeholders));
+    }
+
+    private List<Component> loreFromSection(String section, String path, Map<String, String> placeholders) {
+        List<String> lines = gui().getStringList(section + "." + path);
+        if (lines.isEmpty()) {
+            return List.of();
+        }
+
+        List<Component> components = new ArrayList<>();
+        for (String line : lines) {
+            if (line == null || line.isBlank()) {
+                components.add(Component.empty());
+                continue;
+            }
+            components.add(MINI_MESSAGE.deserialize(line, tagResolver(placeholders)));
+        }
+        return components;
+    }
+
     private ItemStack labeledItem(Material material, String namePath, String lorePath, Map<String, String> placeholders) {
         ItemStack item = item(material);
         ItemMeta meta = item.getItemMeta();
