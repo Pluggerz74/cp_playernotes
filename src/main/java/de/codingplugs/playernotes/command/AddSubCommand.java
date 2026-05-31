@@ -71,10 +71,16 @@ public final class AddSubCommand implements SubCommand {
         );
 
         plugin.notes().createNote(note).whenComplete((created, error) ->
-                CommandSupport.runSync(plugin, () -> {
+                CommandSupport.deliverFeedback(plugin, sender, messages, () -> {
                     if (error != null) {
                         plugin.logSevere("Failed to create note for " + targetName, error);
-                        messages.send(sender, "command.error");
+                        messages.send(sender, "command.database-error");
+                        return;
+                    }
+
+                    if (created == null) {
+                        plugin.logSevere("Failed to create note for " + targetName, new IllegalStateException("createNote returned null"));
+                        messages.send(sender, "command.database-error");
                         return;
                     }
 

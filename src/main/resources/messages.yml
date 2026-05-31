@@ -5,9 +5,10 @@ command:
   unknown: "<prefix><red>Unknown subcommand.</red> <gray>Try</gray> <white>/pn version</white>"
   no-permission: "<prefix><red>You do not have permission to do that.</red>"
   error: "<prefix><red>Something went wrong. Check the console for details.</red>"
+  database-error: "<red>Something went wrong while updating notes. Check console.</red>"
   player-not-found: "<prefix><red>Player not found:</red> <white><player></white>"
   invalid-id: "<prefix><red>Invalid note id.</red> <gray>Use a positive number.</gray>"
-  note-not-found: "<prefix><red>No active note found with id</red> <white>#<id></white><red>.</red>"
+  note-not-found: "<red>No note found with id #<id>.</red>"
   version: |
     <gray>Plugin:</gray> <white><plugin></white>
     <gray>Version:</gray> <white><version></white>
@@ -23,8 +24,8 @@ command:
   list-header: "<prefix><gray>Active notes for</gray> <white><player></white> <gray>(</gray><white><count></white><gray>)</gray>"
   list-empty: "<prefix><gray>No active notes for</gray> <white><player></white><gray>.</gray>"
   add-usage: "<prefix><gray>Usage:</gray> <white>/pn add <player> <note text></white>"
-  add-success: "<prefix><green>Created note</green> <white>#<id></white> <gray>for</gray> <white><player></white><gray>.</gray>"
+  add-success: "<green>✔ Note added for <white><player></white>.</green> <gray>ID: #<id></gray>"
   archive-usage: "<prefix><gray>Usage:</gray> <white>/pn archive <id></white>"
-  archive-success: "<prefix><green>Archived note</green> <white>#<id></white><gray>.</gray>"
+  archive-success: "<green>✔ Note #<id> archived.</green>"
   remove-usage: "<prefix><gray>Usage:</gray> <white>/pn remove <id></white>"
-  remove-success: "<prefix><green>Removed note</green> <white>#<id></white> <gray>permanently.</gray>"
+  remove-success: "<red>✔ Note #<id> permanently removed.</red>"

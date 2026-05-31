@@ -2,6 +2,7 @@ package de.codingplugs.playernotes.command;
 
 import de.codingplugs.playernotes.PlayerNotesPlugin;
 import de.codingplugs.playernotes.permission.Permissions;
+import de.codingplugs.playernotes.service.MessageService;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -28,6 +29,22 @@ public final class CommandSupport {
 
     public static void runSync(PlayerNotesPlugin plugin, Runnable runnable) {
         plugin.getServer().getScheduler().runTask(plugin, runnable);
+    }
+
+    public static void deliverFeedback(
+            PlayerNotesPlugin plugin,
+            CommandSender sender,
+            MessageService messages,
+            Runnable feedback
+    ) {
+        runSync(plugin, () -> {
+            try {
+                feedback.run();
+            } catch (Exception exception) {
+                plugin.logSevere("Failed to send note command feedback", exception);
+                messages.send(sender, "command.database-error");
+            }
+        });
     }
 
     public static Optional<OfflinePlayer> resolvePlayer(String input) {

@@ -42,14 +42,14 @@ public final class ArchiveSubCommand implements SubCommand {
         }
 
         plugin.notes().archiveNote(noteId).whenComplete((archived, error) ->
-                CommandSupport.runSync(plugin, () -> {
+                CommandSupport.deliverFeedback(plugin, sender, messages, () -> {
                     if (error != null) {
                         plugin.logSevere("Failed to archive note #" + noteId, error);
-                        messages.send(sender, "command.error");
+                        messages.send(sender, "command.database-error");
                         return;
                     }
 
-                    if (!archived) {
+                    if (archived == null || !archived) {
                         messages.send(sender, "command.note-not-found", Map.of("id", String.valueOf(noteId)));
                         return;
                     }

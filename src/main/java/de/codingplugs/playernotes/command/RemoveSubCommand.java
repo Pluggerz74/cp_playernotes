@@ -42,14 +42,14 @@ public final class RemoveSubCommand implements SubCommand {
         }
 
         plugin.notes().deleteNote(noteId).whenComplete((removed, error) ->
-                CommandSupport.runSync(plugin, () -> {
+                CommandSupport.deliverFeedback(plugin, sender, messages, () -> {
                     if (error != null) {
                         plugin.logSevere("Failed to remove note #" + noteId, error);
-                        messages.send(sender, "command.error");
+                        messages.send(sender, "command.database-error");
                         return;
                     }
 
-                    if (!removed) {
+                    if (removed == null || !removed) {
                         messages.send(sender, "command.note-not-found", Map.of("id", String.valueOf(noteId)));
                         return;
                     }
