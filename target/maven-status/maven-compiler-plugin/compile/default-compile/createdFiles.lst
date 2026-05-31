@@ -1,4 +1,5 @@
 de\codingplugs\playernotes\gui\NotePrioritySelectGui$ActionType.class
+de\codingplugs\playernotes\command\EditSubCommand.class
 de\codingplugs\playernotes\gui\PlayerNotesGui.class
 de\codingplugs\playernotes\hook\PlaceholderApiHook$CachedSnapshot.class
 de\codingplugs\playernotes\model\NoteFilterMode.class

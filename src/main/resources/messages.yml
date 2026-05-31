@@ -6,7 +6,7 @@
 prefix: "<gray>[</gray><aqua>PlayerNotes</aqua><gray>]</gray> "
 
 command:
-  usage: "<prefix><gray>Usage:</gray> <white>/pn <player|add|list|archive|remove|version|reload|debug|discordtest></white>"
+  usage: "<prefix><gray>Usage:</gray> <white>/pn <player|add|list|archive|edit|remove|version|reload|debug|discordtest></white>"
   unknown: "<prefix><red>Unknown subcommand.</red> <gray>Try</gray> <white>/pn version</white>"
   no-permission: "<prefix><red>You do not have permission to do that.</red>"
   error: "<prefix><red>Something went wrong. Check the console for details.</red>"
@@ -32,6 +32,8 @@ command:
   add-success: "<green>✔ Note added for <white><player></white>.</green> <gray>ID: #<id></gray>"
   archive-usage: "<prefix><gray>Usage:</gray> <white>/pn archive <id></white>"
   archive-success: "<green>✔ Note #<id> archived.</green>"
+  edit-usage: "<red>Usage: /pn edit <id> <new text></red>"
+  edit-success: "<green>✔ Note #<id> updated.</green>"
   remove-usage: "<prefix><gray>Usage:</gray> <white>/pn remove <id></white>"
   remove-success: "<red>✔ Note #<id> permanently removed.</red>"
   # /pn debug output (playernotes.admin)
@@ -76,6 +78,8 @@ chat-input:
   cancelled: "<red>Note creation cancelled.</red>"
   timeout: "<red>Note creation timed out.</red>"
   saved: "<green>✔ Note added for <white><player></white>.</green> <gray>ID: #<id></gray>"
+  edit-start: "<gray>Type the new note content in chat. Type <red>cancel</red> to cancel.</gray>"
+  edit-saved: "<green>✔ Note #<id> updated.</green>"
   error: "<red>Something went wrong while saving the note. Check console.</red>"
 
 # Staff notifications when a flagged player joins

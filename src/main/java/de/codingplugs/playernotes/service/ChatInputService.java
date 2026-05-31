@@ -43,7 +43,7 @@ public final class ChatInputService {
         UUID staffUuid = staff.getUniqueId();
         cancelInput(staffUuid);
 
-        PendingInput pending = new PendingInput(
+        PendingInput pending = PendingInput.forCreate(
                 targetUuid,
                 targetName,
                 type,
@@ -58,6 +58,31 @@ public final class ChatInputService {
                 "type", type.name(),
                 "priority", priority.name()
         ));
+        scheduleTimeout(staffUuid, pending.createdAt());
+    }
+
+    public void startEditInput(
+            Player staff,
+            long noteId,
+            UUID targetUuid,
+            String targetName,
+            int page,
+            NoteFilterMode filterMode
+    ) {
+        UUID staffUuid = staff.getUniqueId();
+        cancelInput(staffUuid);
+
+        PendingInput pending = PendingInput.forEdit(
+                noteId,
+                targetUuid,
+                targetName,
+                page,
+                filterMode,
+                Instant.now()
+        );
+        pendingInputs.put(staffUuid, pending);
+
+        messages.send(staff, "chat-input.edit-start");
         scheduleTimeout(staffUuid, pending.createdAt());
     }
 
@@ -99,7 +124,12 @@ public final class ChatInputService {
         }
 
         pendingInputs.remove(staff.getUniqueId());
-        saveNote(staff, pending, trimmed);
+
+        if (pending.isEdit()) {
+            updateNote(staff, pending, trimmed);
+        } else {
+            saveNote(staff, pending, trimmed);
+        }
     }
 
     public void cancelInput(UUID staffUuid) {
@@ -160,6 +190,42 @@ public final class ChatInputService {
                 }));
     }
 
+    private void updateNote(Player staff, PendingInput pending, String content) {
+        long noteId = pending.editNoteId();
+
+        plugin.notes().updateNoteContent(noteId, content).whenComplete((updated, error) ->
+                CommandSupport.deliverFeedback(plugin, staff, messages, () -> {
+                    if (error != null) {
+                        plugin.logSevere("Failed to edit note #" + noteId, error);
+                        messages.send(staff, "chat-input.error");
+                        return;
+                    }
+
+                    if (updated == null || !updated) {
+                        messages.send(staff, "command.note-not-found", Map.of("id", String.valueOf(noteId)));
+                        guiManager.reopenPlayerNotes(
+                                staff,
+                                pending.targetUuid(),
+                                pending.targetName(),
+                                pending.page(),
+                                pending.filterMode()
+                        );
+                        return;
+                    }
+
+                    messages.send(staff, "chat-input.edit-saved", Map.of("id", String.valueOf(noteId)));
+
+                    guiManager.reopenAfterEdit(
+                            staff,
+                            noteId,
+                            pending.targetUuid(),
+                            pending.targetName(),
+                            pending.page(),
+                            pending.filterMode()
+                    );
+                }));
+    }
+
     private void scheduleTimeout(UUID staffUuid, Instant startedAt) {
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             PendingInput pending = pendingInputs.get(staffUuid);
@@ -181,12 +247,40 @@ public final class ChatInputService {
             String targetName,
             NoteType type,
             NotePriority priority,
+            Long editNoteId,
             int page,
             NoteFilterMode filterMode,
             Instant createdAt
     ) {
 
         private static final long TIMEOUT_SECONDS = 60;
+
+        public static PendingInput forCreate(
+                UUID targetUuid,
+                String targetName,
+                NoteType type,
+                NotePriority priority,
+                int page,
+                NoteFilterMode filterMode,
+                Instant createdAt
+        ) {
+            return new PendingInput(targetUuid, targetName, type, priority, null, page, filterMode, createdAt);
+        }
+
+        public static PendingInput forEdit(
+                long noteId,
+                UUID targetUuid,
+                String targetName,
+                int page,
+                NoteFilterMode filterMode,
+                Instant createdAt
+        ) {
+            return new PendingInput(targetUuid, targetName, null, null, noteId, page, filterMode, createdAt);
+        }
+
+        public boolean isEdit() {
+            return editNoteId != null;
+        }
 
         public boolean isExpired() {
             return Instant.now().isAfter(createdAt.plusSeconds(TIMEOUT_SECONDS));

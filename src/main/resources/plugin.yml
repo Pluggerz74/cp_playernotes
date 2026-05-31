@@ -12,7 +12,7 @@ softdepend:
 commands:
   pn:
     description: PlayerNotes commands
-    usage: /<command> <player|add|list|archive|remove|version|reload|debug|discordtest>
+    usage: /<command> <player|add|list|archive|edit|remove|version|reload|debug|discordtest>
 
 permissions:
   playernotes.use:
@@ -26,6 +26,9 @@ permissions:
     default: op
   playernotes.archive:
     description: Archive player notes
+    default: op
+  playernotes.edit:
+    description: Edit player note content
     default: op
   playernotes.remove:
     description: Permanently remove player notes
@@ -44,6 +47,7 @@ permissions:
       playernotes.view: true
       playernotes.add: true
       playernotes.archive: true
+      playernotes.edit: true
       playernotes.remove: true
       playernotes.reload: true
       playernotes.notify: true

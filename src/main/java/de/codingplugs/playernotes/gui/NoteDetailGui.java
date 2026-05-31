@@ -13,6 +13,7 @@ public final class NoteDetailGui implements InventoryHolder {
 
     public enum ActionType {
         ARCHIVE,
+        EDIT,
         DELETE,
         BACK,
         CLOSE

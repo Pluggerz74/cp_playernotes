@@ -248,6 +248,54 @@ public final class GuiManager {
         plugin.chatInput().startInput(staff, targetUuid, targetName, type, priority, page, filterMode);
     }
 
+    public void startNoteEditInput(Player staff, NoteDetailGui detail) {
+        staff.closeInventory();
+        plugin.chatInput().startEditInput(
+                staff,
+                detail.note().getId(),
+                detail.targetUuid(),
+                detail.targetName(),
+                detail.page(),
+                detail.filterMode()
+        );
+    }
+
+    public void reopenAfterEdit(
+            Player viewer,
+            long noteId,
+            UUID targetUuid,
+            String targetName,
+            int page,
+            NoteFilterMode filterMode
+    ) {
+        plugin.notes().findById(noteId).whenComplete((optionalNote, error) ->
+                CommandSupport.runSync(plugin, () -> {
+                    if (!viewer.isOnline()) {
+                        return;
+                    }
+
+                    if (error != null) {
+                        plugin.logSevere("Failed to reload note #" + noteId + " after edit", error);
+                        messages.send(viewer, "command.error");
+                        return;
+                    }
+
+                    if (optionalNote != null && optionalNote.isPresent()) {
+                        openNoteDetail(
+                                viewer,
+                                optionalNote.get(),
+                                targetUuid,
+                                targetName,
+                                page,
+                                filterMode
+                        );
+                        return;
+                    }
+
+                    reopenPlayerNotes(viewer, targetUuid, targetName, page, filterMode);
+                }));
+    }
+
     private PlayerNotesGui buildMenu(
             UUID targetUuid,
             String targetName,
@@ -399,12 +447,14 @@ public final class GuiManager {
 
         int infoSlot = itemBuilder.detailSlot("info", 10);
         int archiveSlot = itemBuilder.detailSlot("archive", 12);
+        int editSlot = itemBuilder.detailSlot("edit", 13);
         int deleteSlot = itemBuilder.detailSlot("delete", 14);
         int backSlot = itemBuilder.detailSlot("back", 16);
         int closeSlot = itemBuilder.detailSlot("close", 22);
 
         interactiveSlots.add(infoSlot);
         interactiveSlots.add(archiveSlot);
+        interactiveSlots.add(editSlot);
         interactiveSlots.add(deleteSlot);
         interactiveSlots.add(backSlot);
         interactiveSlots.add(closeSlot);
@@ -421,11 +471,13 @@ public final class GuiManager {
                 note.getStaffName()
         ));
         inventory.setItem(archiveSlot, itemBuilder.detailArchiveButton());
+        inventory.setItem(editSlot, itemBuilder.detailEditButton());
         inventory.setItem(deleteSlot, itemBuilder.detailDeleteButton());
         inventory.setItem(backSlot, itemBuilder.detailBackButton());
         inventory.setItem(closeSlot, itemBuilder.detailCloseButton());
 
         detail.registerAction(archiveSlot, new NoteDetailGui.SlotAction(NoteDetailGui.ActionType.ARCHIVE));
+        detail.registerAction(editSlot, new NoteDetailGui.SlotAction(NoteDetailGui.ActionType.EDIT));
         detail.registerAction(deleteSlot, new NoteDetailGui.SlotAction(NoteDetailGui.ActionType.DELETE));
         detail.registerAction(backSlot, new NoteDetailGui.SlotAction(NoteDetailGui.ActionType.BACK));
         detail.registerAction(closeSlot, new NoteDetailGui.SlotAction(NoteDetailGui.ActionType.CLOSE));

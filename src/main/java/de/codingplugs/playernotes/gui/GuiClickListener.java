@@ -109,6 +109,7 @@ public final class GuiClickListener implements Listener {
                     detail.filterMode()
             );
             case ARCHIVE -> handleArchive(player, detail);
+            case EDIT -> handleEdit(player, detail);
             case DELETE -> handleDelete(player, detail);
         }
     }
@@ -239,6 +240,15 @@ public final class GuiClickListener implements Listener {
         }
 
         guiManager.archiveNoteFromGui(player, detail);
+    }
+
+    private void handleEdit(Player player, NoteDetailGui detail) {
+        if (!CommandSupport.hasPermission(player, Permissions.EDIT)) {
+            guiManager.messages().send(player, "command.no-permission");
+            return;
+        }
+
+        guiManager.startNoteEditInput(player, detail);
     }
 
     private void handleDelete(Player player, NoteDetailGui detail) {

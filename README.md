@@ -34,6 +34,7 @@ Staff moderation notes for Minecraft servers — track player history, flag high
 | `/pn list <player>` | List active notes in chat |
 | `/pn add <player> <text>` | Add a note (Info / Normal priority) |
 | `/pn archive <id>` | Archive a note |
+| `/pn edit <id> <text>` | Update note content |
 | `/pn remove <id>` | Permanently delete a note |
 | `/pn version` | Show plugin version |
 | `/pn reload` | Reload configuration |
@@ -48,6 +49,7 @@ Staff moderation notes for Minecraft servers — track player history, flag high
 | `playernotes.view` | View player notes | `op` |
 | `playernotes.add` | Add notes | `op` |
 | `playernotes.archive` | Archive notes | `op` |
+| `playernotes.edit` | Edit note content | `op` |
 | `playernotes.remove` | Delete notes | `op` |
 | `playernotes.reload` | Reload config | `op` |
 | `playernotes.notify` | Receive join alerts | `op` |

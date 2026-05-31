@@ -6,6 +6,7 @@ public final class Permissions {
     public static final String VIEW = "playernotes.view";
     public static final String ADD = "playernotes.add";
     public static final String ARCHIVE = "playernotes.archive";
+    public static final String EDIT = "playernotes.edit";
     public static final String REMOVE = "playernotes.remove";
     public static final String RELOAD = "playernotes.reload";
     public static final String NOTIFY = "playernotes.notify";

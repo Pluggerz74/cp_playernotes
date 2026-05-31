@@ -51,6 +51,12 @@ public final class SqlNoteRepository implements NoteRepository {
             WHERE id = ?
             """;
 
+    private static final String UPDATE_CONTENT = """
+            UPDATE player_notes
+            SET content = ?, updated_at = ?
+            WHERE id = ?
+            """;
+
     private static final String COUNT_ACTIVE = """
             SELECT COUNT(*)
             FROM player_notes
@@ -163,6 +169,22 @@ public final class SqlNoteRepository implements NoteRepository {
         return supplyAsync(connection -> {
             try (PreparedStatement statement = connection.prepareStatement(DELETE_NOTE)) {
                 statement.setLong(1, id);
+                return statement.executeUpdate() > 0;
+            }
+        });
+    }
+
+    @Override
+    public CompletableFuture<Boolean> updateNoteContent(long id, String newContent) {
+        if (newContent == null || newContent.isBlank()) {
+            return CompletableFuture.completedFuture(false);
+        }
+
+        return supplyAsync(connection -> {
+            try (PreparedStatement statement = connection.prepareStatement(UPDATE_CONTENT)) {
+                statement.setString(1, newContent.trim());
+                statement.setString(2, Instant.now().toString());
+                statement.setLong(3, id);
                 return statement.executeUpdate() > 0;
             }
         });

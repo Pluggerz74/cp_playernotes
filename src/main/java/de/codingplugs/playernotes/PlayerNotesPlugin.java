@@ -2,6 +2,7 @@ package de.codingplugs.playernotes;
 
 import de.codingplugs.playernotes.command.DebugSubCommand;
 import de.codingplugs.playernotes.command.DiscordTestSubCommand;
+import de.codingplugs.playernotes.command.EditSubCommand;
 import de.codingplugs.playernotes.command.AddSubCommand;
 import de.codingplugs.playernotes.command.ArchiveSubCommand;
 import de.codingplugs.playernotes.command.ListSubCommand;
@@ -172,6 +173,7 @@ public final class PlayerNotesPlugin extends JavaPlugin {
                 new AddSubCommand(this, messageService),
                 new ListSubCommand(this, messageService),
                 new ArchiveSubCommand(this, messageService),
+                new EditSubCommand(this, messageService),
                 new RemoveSubCommand(this, messageService),
                 new VersionSubCommand(this, messageService),
                 new ReloadSubCommand(this, messageService),

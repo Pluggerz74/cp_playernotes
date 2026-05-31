@@ -102,6 +102,7 @@ detail-menu:
   slots:
     info: 10
     archive: 12
+    edit: 13
     delete: 14
     back: 16
     close: 22
@@ -120,6 +121,11 @@ detail-menu:
       - "<gray>Hide this note from active list</gray>"
       - ""
       - "<yellow>Click to archive</yellow>"
+    edit-name: "<gradient:#60a5fa:#93c5fd><bold>Edit Note</bold></gradient>"
+    edit-lore:
+      - "<gray>Update the content of this note</gray>"
+      - ""
+      - "<blue>Click to edit</blue>"
     delete-name: "<red><bold>Delete Note</bold></red>"
     delete-lore:
       - "<gray>Permanently remove this note</gray>"

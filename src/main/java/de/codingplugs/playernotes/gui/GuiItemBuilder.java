@@ -261,6 +261,16 @@ public final class GuiItemBuilder {
         );
     }
 
+    public ItemStack detailEditButton() {
+        return labeledItemFromSection(
+                "detail-menu",
+                Material.WRITABLE_BOOK,
+                "labels.edit-name",
+                "labels.edit-lore",
+                Collections.emptyMap()
+        );
+    }
+
     public ItemStack detailDeleteButton() {
         return labeledItemFromSection(
                 "detail-menu",

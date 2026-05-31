@@ -23,6 +23,8 @@ public interface NoteRepository {
 
     CompletableFuture<Boolean> deleteNote(long id);
 
+    CompletableFuture<Boolean> updateNoteContent(long id, String newContent);
+
     CompletableFuture<Integer> countActiveNotes(UUID targetUuid);
 
     CompletableFuture<Integer> countCriticalNotes(UUID targetUuid);
