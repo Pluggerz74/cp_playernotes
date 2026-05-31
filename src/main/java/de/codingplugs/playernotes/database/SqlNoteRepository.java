@@ -56,6 +56,17 @@ public final class SqlNoteRepository implements NoteRepository {
             WHERE target_uuid = ? AND archived = 0
             """;
 
+    private static final String COUNT_ALL = """
+            SELECT COUNT(*)
+            FROM player_notes
+            """;
+
+    private static final String COUNT_ALL_ACTIVE = """
+            SELECT COUNT(*)
+            FROM player_notes
+            WHERE archived = 0
+            """;
+
     private final DatabaseProvider databaseProvider;
 
     public SqlNoteRepository(DatabaseProvider databaseProvider) {
@@ -169,6 +180,26 @@ public final class SqlNoteRepository implements NoteRepository {
     @Override
     public CompletableFuture<Integer> countCriticalNotes(UUID targetUuid) {
         return countActiveNotesAtOrAbovePriority(targetUuid, NotePriority.CRITICAL);
+    }
+
+    @Override
+    public CompletableFuture<Integer> countAllNotes() {
+        return countQuery(COUNT_ALL);
+    }
+
+    @Override
+    public CompletableFuture<Integer> countAllActiveNotes() {
+        return countQuery(COUNT_ALL_ACTIVE);
+    }
+
+    private CompletableFuture<Integer> countQuery(String query) {
+        return supplyAsync(connection -> {
+            try (PreparedStatement statement = connection.prepareStatement(query);
+                 ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                return resultSet.getInt(1);
+            }
+        });
     }
 
     @Override

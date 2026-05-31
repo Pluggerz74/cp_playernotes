@@ -1,7 +1,7 @@
 prefix: "<gray>[</gray><aqua>PlayerNotes</aqua><gray>]</gray> "
 
 command:
-  usage: "<prefix><gray>Usage:</gray> <white>/pn <player|add|list|archive|remove|version|reload></white>"
+  usage: "<prefix><gray>Usage:</gray> <white>/pn <player|add|list|archive|remove|version|reload|debug></white>"
   unknown: "<prefix><red>Unknown subcommand.</red> <gray>Try</gray> <white>/pn version</white>"
   no-permission: "<prefix><red>You do not have permission to do that.</red>"
   error: "<prefix><red>Something went wrong. Check the console for details.</red>"
@@ -29,6 +29,29 @@ command:
   archive-success: "<green>✔ Note #<id> archived.</green>"
   remove-usage: "<prefix><gray>Usage:</gray> <white>/pn remove <id></white>"
   remove-success: "<red>✔ Note #<id> permanently removed.</red>"
+  debug: |
+    <gold><bold>PlayerNotes Diagnostics</bold></gold>
+    <gray>Plugin:</gray> <white><plugin> v<version></white>
+    <gray>Server:</gray> <white><server></white>
+    <gray>Java:</gray> <white><java></white>
+    <gray>Storage:</gray> <white><storage></white>
+    <gray>Database:</gray> <white><database></white>
+    <gray>PlaceholderAPI:</gray> <white><placeholderapi></white>
+    <gray>Discord:</gray> <white><discord></white>
+    <gray>Join alerts:</gray> <white><join_alerts></white>
+    <gray>GUI config:</gray> <white><gui_config></white>
+    <gray>Messages config:</gray> <white><messages_config></white>
+  debug-notes: "<gray>Total notes:</gray> <white><total></white> <dark_gray>|</dark_gray> <gray>Active notes:</gray> <white><active></white>"
+  debug-unavailable: "unavailable"
+  debug-yes: "yes"
+  debug-no: "no"
+  debug-enabled: "enabled"
+  debug-disabled: "disabled"
+  debug-database-connected: "connected"
+  debug-database-failed: "failed"
+  debug-discord-disabled: "disabled"
+  debug-discord-enabled-configured: "enabled / configured"
+  debug-discord-enabled-unconfigured: "enabled / not configured"
 
 gui:
   console-no-gui: "<prefix><gray>Only players can open the notes GUI.</gray> <dark_gray>Use /pn list <player></dark_gray>"

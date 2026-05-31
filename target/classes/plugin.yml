@@ -12,7 +12,7 @@ softdepend:
 commands:
   pn:
     description: PlayerNotes commands
-    usage: /<command> <player|add|list|archive|remove|version|reload>
+    usage: /<command> <player|add|list|archive|remove|version|reload|debug>
 
 permissions:
   playernotes.use:

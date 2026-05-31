@@ -25,4 +25,8 @@ public interface NoteRepository {
     CompletableFuture<Integer> countCriticalNotes(UUID targetUuid);
 
     CompletableFuture<Integer> countActiveNotesAtOrAbovePriority(UUID targetUuid, NotePriority minimumPriority);
+
+    CompletableFuture<Integer> countAllNotes();
+
+    CompletableFuture<Integer> countAllActiveNotes();
 }

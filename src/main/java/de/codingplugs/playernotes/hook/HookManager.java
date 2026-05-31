@@ -54,4 +54,12 @@ public final class HookManager {
         placeholderApiHook.unregister();
         placeholderApiHook = null;
     }
+
+    public boolean isPlaceholderApiInstalled() {
+        return Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null;
+    }
+
+    public boolean isPlaceholderApiRegistered() {
+        return placeholderApiHook != null;
+    }
 }

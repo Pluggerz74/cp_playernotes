@@ -7,6 +7,7 @@ de\codingplugs\playernotes\permission\Permissions.class
 de\codingplugs\playernotes\database\SQLiteDatabaseProvider.class
 de\codingplugs\playernotes\command\ArchiveSubCommand.class
 de\codingplugs\playernotes\model\NoteType.class
+de\codingplugs\playernotes\command\DebugSubCommand.class
 de\codingplugs\playernotes\command\ListSubCommand.class
 de\codingplugs\playernotes\database\package-info.class
 de\codingplugs\playernotes\gui\PlayerNotesGui$ActionType.class
@@ -36,6 +37,7 @@ de\codingplugs\playernotes\gui\GuiItemBuilder$1.class
 de\codingplugs\playernotes\gui\NotePrioritySelectGui.class
 de\codingplugs\playernotes\hook\HookManager.class
 de\codingplugs\playernotes\note\package-info.class
+de\codingplugs\playernotes\config\ConfigSanityChecker.class
 de\codingplugs\playernotes\config\ConfigManager.class
 de\codingplugs\playernotes\scheduler\package-info.class
 de\codingplugs\playernotes\service\ChatInputService$PendingInput.class
@@ -55,6 +57,7 @@ de\codingplugs\playernotes\database\DatabaseSchema.class
 de\codingplugs\playernotes\gui\NoteTypeSelectGui$SlotAction.class
 de\codingplugs\playernotes\command\AddSubCommand.class
 de\codingplugs\playernotes\database\DatabaseProvider.class
+de\codingplugs\playernotes\service\DiagnosticsService.class
 de\codingplugs\playernotes\util\package-info.class
 de\codingplugs\playernotes\gui\NoteDetailGui$ActionType.class
 de\codingplugs\playernotes\service\JoinAlertService.class

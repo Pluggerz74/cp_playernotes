@@ -1,5 +1,6 @@
 package de.codingplugs.playernotes;
 
+import de.codingplugs.playernotes.command.DebugSubCommand;
 import de.codingplugs.playernotes.command.AddSubCommand;
 import de.codingplugs.playernotes.command.ArchiveSubCommand;
 import de.codingplugs.playernotes.command.ListSubCommand;
@@ -10,6 +11,7 @@ import de.codingplugs.playernotes.command.SubCommand;
 import de.codingplugs.playernotes.command.VersionSubCommand;
 import de.codingplugs.playernotes.command.ViewPlayerCommand;
 import de.codingplugs.playernotes.config.ConfigManager;
+import de.codingplugs.playernotes.config.ConfigSanityChecker;
 import de.codingplugs.playernotes.database.DatabaseFactory;
 import de.codingplugs.playernotes.database.DatabaseProvider;
 import de.codingplugs.playernotes.database.NoteRepository;
@@ -42,6 +44,7 @@ public final class PlayerNotesPlugin extends JavaPlugin {
     private ChatInputService chatInputService;
     private HookManager hookManager;
     private DiscordWebhookService discordWebhookService;
+    private ConfigSanityChecker configSanityChecker;
 
     @Override
     public void onEnable() {
@@ -54,6 +57,7 @@ public final class PlayerNotesPlugin extends JavaPlugin {
         messageService = new MessageService(configManager);
         messageService.load();
         discordWebhookService = new DiscordWebhookService(this);
+        configSanityChecker = new ConfigSanityChecker(this);
 
         if (!initializeDatabase()) {
             getServer().getPluginManager().disablePlugin(this);
@@ -63,6 +67,7 @@ public final class PlayerNotesPlugin extends JavaPlugin {
         registerListeners();
         registerCommands();
         registerHooks();
+        runConfigSanityChecks();
 
         getLogger().info("PlayerNotes enabled.");
     }
@@ -88,6 +93,13 @@ public final class PlayerNotesPlugin extends JavaPlugin {
         if (discordWebhookService != null) {
             discordWebhookService.reload();
         }
+        runConfigSanityChecks();
+    }
+
+    public void runConfigSanityChecks() {
+        if (configSanityChecker != null) {
+            configSanityChecker.checkAndLogWarnings();
+        }
     }
 
     public ConfigManager configManager() {
@@ -112,6 +124,14 @@ public final class PlayerNotesPlugin extends JavaPlugin {
 
     public DiscordWebhookService discord() {
         return discordWebhookService;
+    }
+
+    public HookManager hooks() {
+        return hookManager;
+    }
+
+    public DatabaseProvider databaseProvider() {
+        return databaseProvider;
     }
 
     private boolean initializeDatabase() {
@@ -153,7 +173,8 @@ public final class PlayerNotesPlugin extends JavaPlugin {
                 new ArchiveSubCommand(this, messageService),
                 new RemoveSubCommand(this, messageService),
                 new VersionSubCommand(this, messageService),
-                new ReloadSubCommand(this, messageService)
+                new ReloadSubCommand(this, messageService),
+                new DebugSubCommand(this, messageService)
         );
 
         ViewPlayerCommand viewPlayerCommand = new ViewPlayerCommand(this, messageService, guiManager);
