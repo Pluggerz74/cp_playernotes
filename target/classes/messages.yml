@@ -1,0 +1,14 @@
+prefix: "<gray>[</gray><aqua>PlayerNotes</aqua><gray>]</gray> "
+
+command:
+  usage: "<prefix><gray>Usage:</gray> <white>/pn <version|reload></white>"
+  unknown: "<prefix><red>Unknown subcommand.</red> <gray>Try</gray> <white>/pn version</white>"
+  no-permission: "<prefix><red>You do not have permission to do that.</red>"
+  version: |
+    <gray>Plugin:</gray> <white><plugin></white>
+    <gray>Version:</gray> <white><version></white>
+    <gray>Author:</gray> <white><author></white>
+    <gray>Supported:</gray> <white><supported></white>
+    <gray>Java:</gray> <white><java></white>
+  reload-success: "<prefix><green>Configuration reloaded.</green>"
+  reload-failure: "<prefix><red>Reload failed. Check the console for details.</red>"

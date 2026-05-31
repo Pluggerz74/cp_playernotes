@@ -1,0 +1,27 @@
+name: cp_playernotes
+version: '${project.version}'
+main: de.codingplugs.playernotes.PlayerNotesPlugin
+api-version: '1.19'
+description: Player notes for staff and administrators
+authors:
+  - CodingPlugs
+
+commands:
+  pn:
+    description: PlayerNotes commands
+    usage: /<command> <version|reload>
+    permission: playernotes.use
+
+permissions:
+  playernotes.use:
+    description: Access /pn version
+    default: true
+  playernotes.reload:
+    description: Reload plugin configuration
+    default: op
+  playernotes.admin:
+    description: Full PlayerNotes administration
+    default: op
+    children:
+      playernotes.use: true
+      playernotes.reload: true

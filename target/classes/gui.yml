@@ -1,0 +1,6 @@
+# GUI layout definitions for PlayerNotes
+# Menus will be configured here in future releases.
+
+notes-menu:
+  title: "<dark_gray>Player Notes</dark_gray>"
+  size: 54

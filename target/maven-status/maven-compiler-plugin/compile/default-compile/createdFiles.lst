@@ -1,0 +1,16 @@
+de\codingplugs\playernotes\command\VersionSubCommand.class
+de\codingplugs\playernotes\service\MessageService.class
+de\codingplugs\playernotes\hook\package-info.class
+de\codingplugs\playernotes\command\SubCommand.class
+de\codingplugs\playernotes\note\package-info.class
+de\codingplugs\playernotes\permission\Permissions.class
+de\codingplugs\playernotes\util\package-info.class
+de\codingplugs\playernotes\command\ReloadSubCommand.class
+de\codingplugs\playernotes\config\ConfigManager.class
+de\codingplugs\playernotes\gui\package-info.class
+de\codingplugs\playernotes\scheduler\package-info.class
+de\codingplugs\playernotes\PlayerNotesPlugin.class
+de\codingplugs\playernotes\command\PlayerNotesCommand.class
+de\codingplugs\playernotes\database\package-info.class
+de\codingplugs\playernotes\listener\package-info.class
+de\codingplugs\playernotes\model\package-info.class

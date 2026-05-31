@@ -1,0 +1,4 @@
+# cp_playernotes main configuration
+# Extended settings will be added in future releases.
+
+debug: false
