@@ -1,5 +1,6 @@
 package de.codingplugs.playernotes.database;
 
+import de.codingplugs.playernotes.model.NoteFilterMode;
 import de.codingplugs.playernotes.model.NotePriority;
 import de.codingplugs.playernotes.model.NoteType;
 import de.codingplugs.playernotes.model.PlayerNote;
@@ -123,10 +124,14 @@ public final class SqlNoteRepository implements NoteRepository {
 
     @Override
     public CompletableFuture<List<PlayerNote>> findByTarget(UUID targetUuid, boolean includeArchived) {
+        NoteFilterMode filterMode = includeArchived ? NoteFilterMode.ALL : NoteFilterMode.ACTIVE;
+        return findByTarget(targetUuid, filterMode);
+    }
+
+    @Override
+    public CompletableFuture<List<PlayerNote>> findByTarget(UUID targetUuid, NoteFilterMode filterMode) {
         return supplyAsync(connection -> {
-            String query = includeArchived
-                    ? SELECT_BY_TARGET + " ORDER BY created_at DESC"
-                    : SELECT_BY_TARGET + " AND archived = 0 ORDER BY created_at DESC";
+            String query = SELECT_BY_TARGET + filterMode.sqlSuffix() + " ORDER BY created_at DESC";
 
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, targetUuid.toString());

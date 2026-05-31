@@ -1,5 +1,6 @@
 package de.codingplugs.playernotes.gui;
 
+import de.codingplugs.playernotes.model.NoteFilterMode;
 import de.codingplugs.playernotes.model.PlayerNote;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -25,13 +26,21 @@ public final class NoteDetailGui implements InventoryHolder {
     private final UUID targetUuid;
     private final String targetName;
     private final int page;
+    private final NoteFilterMode filterMode;
     private final Map<Integer, SlotAction> slotActions = new HashMap<>();
 
-    public NoteDetailGui(PlayerNote note, UUID targetUuid, String targetName, int page) {
+    public NoteDetailGui(
+            PlayerNote note,
+            UUID targetUuid,
+            String targetName,
+            int page,
+            NoteFilterMode filterMode
+    ) {
         this.note = note;
         this.targetUuid = targetUuid;
         this.targetName = targetName;
         this.page = page;
+        this.filterMode = filterMode;
     }
 
     public void bindInventory(Inventory inventory) {
@@ -57,6 +66,10 @@ public final class NoteDetailGui implements InventoryHolder {
 
     public int page() {
         return page;
+    }
+
+    public NoteFilterMode filterMode() {
+        return filterMode;
     }
 
     public void registerAction(int slot, SlotAction action) {

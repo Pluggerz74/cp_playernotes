@@ -1,5 +1,6 @@
 package de.codingplugs.playernotes.database;
 
+import de.codingplugs.playernotes.model.NoteFilterMode;
 import de.codingplugs.playernotes.model.NotePriority;
 import de.codingplugs.playernotes.model.PlayerNote;
 
@@ -15,6 +16,8 @@ public interface NoteRepository {
     CompletableFuture<Optional<PlayerNote>> findById(long id);
 
     CompletableFuture<List<PlayerNote>> findByTarget(UUID targetUuid, boolean includeArchived);
+
+    CompletableFuture<List<PlayerNote>> findByTarget(UUID targetUuid, NoteFilterMode filterMode);
 
     CompletableFuture<Boolean> archiveNote(long id);
 

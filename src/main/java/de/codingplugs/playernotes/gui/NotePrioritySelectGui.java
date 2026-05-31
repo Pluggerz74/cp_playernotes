@@ -1,5 +1,6 @@
 package de.codingplugs.playernotes.gui;
 
+import de.codingplugs.playernotes.model.NoteFilterMode;
 import de.codingplugs.playernotes.model.NotePriority;
 import de.codingplugs.playernotes.model.NoteType;
 import org.bukkit.inventory.Inventory;
@@ -25,13 +26,21 @@ public final class NotePrioritySelectGui implements InventoryHolder {
     private final String targetName;
     private final NoteType noteType;
     private final int page;
+    private final NoteFilterMode filterMode;
     private final Map<Integer, SlotAction> slotActions = new HashMap<>();
 
-    public NotePrioritySelectGui(UUID targetUuid, String targetName, NoteType noteType, int page) {
+    public NotePrioritySelectGui(
+            UUID targetUuid,
+            String targetName,
+            NoteType noteType,
+            int page,
+            NoteFilterMode filterMode
+    ) {
         this.targetUuid = targetUuid;
         this.targetName = targetName;
         this.noteType = noteType;
         this.page = page;
+        this.filterMode = filterMode;
     }
 
     public void bindInventory(Inventory inventory) {
@@ -57,6 +66,10 @@ public final class NotePrioritySelectGui implements InventoryHolder {
 
     public int page() {
         return page;
+    }
+
+    public NoteFilterMode filterMode() {
+        return filterMode;
     }
 
     public void registerAction(int slot, SlotAction action) {

@@ -1,5 +1,6 @@
 package de.codingplugs.playernotes.gui;
 
+import de.codingplugs.playernotes.model.NoteFilterMode;
 import de.codingplugs.playernotes.model.NotePriority;
 import de.codingplugs.playernotes.model.NoteType;
 import de.codingplugs.playernotes.PlayerNotesPlugin;
@@ -104,30 +105,76 @@ public final class GuiItemBuilder {
         return labeledItem(material, namePath, "labels.note-lore", placeholders);
     }
 
-    public ItemStack closeButton() {
+    public ItemStack closeButton(int currentPage, int totalPages) {
         return labeledItem(
                 getMaterial("materials.close", Material.BARRIER),
                 "labels.close-name",
                 "labels.close-lore",
+                paginationPlaceholders(currentPage, totalPages)
+        );
+    }
+
+    public ItemStack filterButton(NoteFilterMode filterMode) {
+        return labeledItem(
+                getMaterial("materials.filter", Material.HOPPER),
+                "labels.filter-name",
+                "labels.filter-lore",
+                Map.of("filter", filterMode.name())
+        );
+    }
+
+    public ItemStack previousButtonEnabled(int currentPage, int totalPages) {
+        return labeledItem(
+                getMaterial("materials.previous", Material.ARROW),
+                "labels.previous-enabled-name",
+                "labels.previous-enabled-lore",
+                paginationPlaceholders(currentPage, totalPages)
+        );
+    }
+
+    public ItemStack previousButtonDisabled() {
+        return labeledItem(
+                getMaterial("materials.nav-disabled", Material.GRAY_DYE),
+                "labels.previous-disabled-name",
+                "labels.previous-disabled-lore",
                 Collections.emptyMap()
         );
+    }
+
+    public ItemStack nextButtonEnabled(int currentPage, int totalPages) {
+        return labeledItem(
+                getMaterial("materials.next", Material.ARROW),
+                "labels.next-enabled-name",
+                "labels.next-enabled-lore",
+                paginationPlaceholders(currentPage, totalPages)
+        );
+    }
+
+    public ItemStack nextButtonDisabled() {
+        return labeledItem(
+                getMaterial("materials.nav-disabled", Material.GRAY_DYE),
+                "labels.next-disabled-name",
+                "labels.next-disabled-lore",
+                Collections.emptyMap()
+        );
+    }
+
+    public ItemStack closeButton() {
+        return closeButton(0, 1);
     }
 
     public ItemStack previousButton() {
-        return labeledItem(
-                getMaterial("materials.previous", Material.ARROW),
-                "labels.previous-name",
-                "labels.previous-lore",
-                Collections.emptyMap()
-        );
+        return previousButtonDisabled();
     }
 
     public ItemStack nextButton() {
-        return labeledItem(
-                getMaterial("materials.next", Material.ARROW),
-                "labels.next-name",
-                "labels.next-lore",
-                Collections.emptyMap()
+        return nextButtonDisabled();
+    }
+
+    private static Map<String, String> paginationPlaceholders(int currentPage, int totalPages) {
+        return Map.of(
+                "current", String.valueOf(currentPage + 1),
+                "total", String.valueOf(totalPages)
         );
     }
 

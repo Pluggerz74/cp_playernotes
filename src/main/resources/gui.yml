@@ -22,6 +22,8 @@ notes-menu:
     close: BARRIER
     previous: ARROW
     next: ARROW
+    filter: HOPPER
+    nav-disabled: GRAY_DYE
 
   # Inventory slot indices (0–53 for a 54-slot menu)
   slots:
@@ -32,6 +34,7 @@ notes-menu:
     note-start: 28
     note-end: 34
     previous: 45
+    filter: 48
     close: 49
     next: 53
 
@@ -66,13 +69,30 @@ notes-menu:
       - "<blue>Click to view details</blue>"
     close-name: "<red><bold>Close</bold></red>"
     close-lore:
+      - "<gray>Page <white><current></white> / <white><total></white></gray>"
+      - ""
       - "<gray>Close this menu</gray>"
-    previous-name: "<gray><bold>Previous</bold></gray>"
-    previous-lore:
-      - "<dark_gray>Coming soon</dark_gray>"
-    next-name: "<gray><bold>Next</bold></gray>"
-    next-lore:
-      - "<dark_gray>Coming soon</dark_gray>"
+    filter-name: "<white><bold>Filter</bold></white>"
+    filter-lore:
+      - "<gray>Current: <white><filter></white></gray>"
+      - ""
+      - "<blue>Click to change</blue>"
+    previous-enabled-name: "<white><bold>Previous Page</bold></white>"
+    previous-enabled-lore:
+      - "<gray>Page <white><current></white> / <white><total></white></gray>"
+      - ""
+      - "<blue>Go to previous page</blue>"
+    previous-disabled-name: "<dark_gray><bold>Unavailable</bold></dark_gray>"
+    previous-disabled-lore:
+      - "<dark_gray>No previous page</dark_gray>"
+    next-enabled-name: "<white><bold>Next Page</bold></white>"
+    next-enabled-lore:
+      - "<gray>Page <white><current></white> / <white><total></white></gray>"
+      - ""
+      - "<blue>Go to next page</blue>"
+    next-disabled-name: "<dark_gray><bold>Unavailable</bold></dark_gray>"
+    next-disabled-lore:
+      - "<dark_gray>No next page</dark_gray>"
 
 # Single note detail view (archive / delete actions)
 detail-menu:

@@ -1,6 +1,7 @@
 package de.codingplugs.playernotes.gui;
 
 import de.codingplugs.playernotes.command.CommandSupport;
+import de.codingplugs.playernotes.model.NoteFilterMode;
 import de.codingplugs.playernotes.model.PlayerNote;
 import de.codingplugs.playernotes.permission.Permissions;
 import de.codingplugs.playernotes.service.ChatInputService;
@@ -57,7 +58,27 @@ public final class GuiClickListener implements Listener {
         switch (action.type()) {
             case CLOSE -> player.closeInventory();
             case ADD_NOTE -> handleAddNote(player, menu);
-            case PREVIOUS, NEXT -> guiManager.messages().send(player, "gui.pagination-placeholder");
+            case PREVIOUS -> guiManager.loadAndOpenPlayerNotes(
+                    player,
+                    menu.targetUuid(),
+                    menu.targetName(),
+                    menu.page() - 1,
+                    menu.filterMode()
+            );
+            case NEXT -> guiManager.loadAndOpenPlayerNotes(
+                    player,
+                    menu.targetUuid(),
+                    menu.targetName(),
+                    menu.page() + 1,
+                    menu.filterMode()
+            );
+            case FILTER -> guiManager.loadAndOpenPlayerNotes(
+                    player,
+                    menu.targetUuid(),
+                    menu.targetName(),
+                    0,
+                    menu.filterMode().next()
+            );
             case NOTE -> handleNoteClick(player, menu, action.noteId());
         }
     }
@@ -84,7 +105,8 @@ public final class GuiClickListener implements Listener {
                     player,
                     detail.targetUuid(),
                     detail.targetName(),
-                    detail.page()
+                    detail.page(),
+                    detail.filterMode()
             );
             case ARCHIVE -> handleArchive(player, detail);
             case DELETE -> handleDelete(player, detail);
@@ -113,7 +135,8 @@ public final class GuiClickListener implements Listener {
                     player,
                     menu.targetUuid(),
                     menu.targetName(),
-                    menu.page()
+                    menu.page(),
+                    menu.filterMode()
             );
             case SELECT -> {
                 if (action.noteType() == null) {
@@ -124,7 +147,8 @@ public final class GuiClickListener implements Listener {
                         menu.targetUuid(),
                         menu.targetName(),
                         action.noteType(),
-                        menu.page()
+                        menu.page(),
+                        menu.filterMode()
                 );
             }
         }
@@ -152,7 +176,8 @@ public final class GuiClickListener implements Listener {
                     player,
                     menu.targetUuid(),
                     menu.targetName(),
-                    menu.page()
+                    menu.page(),
+                    menu.filterMode()
             );
             case SELECT -> {
                 if (action.priority() == null) {
@@ -164,7 +189,8 @@ public final class GuiClickListener implements Listener {
                         menu.targetName(),
                         menu.noteType(),
                         action.priority(),
-                        menu.page()
+                        menu.page(),
+                        menu.filterMode()
                 );
             }
         }
@@ -176,7 +202,13 @@ public final class GuiClickListener implements Listener {
             return;
         }
 
-        guiManager.openTypeSelect(player, menu.targetUuid(), menu.targetName(), menu.page());
+        guiManager.openTypeSelect(
+                player,
+                menu.targetUuid(),
+                menu.targetName(),
+                menu.page(),
+                menu.filterMode()
+        );
     }
 
     private void handleNoteClick(Player player, PlayerNotesGui menu, Long noteId) {
@@ -190,7 +222,14 @@ public final class GuiClickListener implements Listener {
             return;
         }
 
-        guiManager.openNoteDetail(player, note, menu.targetUuid(), menu.targetName(), menu.page());
+        guiManager.openNoteDetail(
+                player,
+                note,
+                menu.targetUuid(),
+                menu.targetName(),
+                menu.page(),
+                menu.filterMode()
+        );
     }
 
     private void handleArchive(Player player, NoteDetailGui detail) {

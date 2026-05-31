@@ -3,6 +3,7 @@ package de.codingplugs.playernotes.service;
 import de.codingplugs.playernotes.PlayerNotesPlugin;
 import de.codingplugs.playernotes.command.CommandSupport;
 import de.codingplugs.playernotes.gui.GuiManager;
+import de.codingplugs.playernotes.model.NoteFilterMode;
 import de.codingplugs.playernotes.model.NotePriority;
 import de.codingplugs.playernotes.model.NoteType;
 import de.codingplugs.playernotes.model.PlayerNote;
@@ -36,12 +37,21 @@ public final class ChatInputService {
             String targetName,
             NoteType type,
             NotePriority priority,
-            int page
+            int page,
+            NoteFilterMode filterMode
     ) {
         UUID staffUuid = staff.getUniqueId();
         cancelInput(staffUuid);
 
-        PendingInput pending = new PendingInput(targetUuid, targetName, type, priority, page, Instant.now());
+        PendingInput pending = new PendingInput(
+                targetUuid,
+                targetName,
+                type,
+                priority,
+                page,
+                filterMode,
+                Instant.now()
+        );
         pendingInputs.put(staffUuid, pending);
 
         messages.send(staff, "chat-input.start", Map.of(
@@ -144,7 +154,8 @@ public final class ChatInputService {
                             staff,
                             pending.targetUuid(),
                             pending.targetName(),
-                            pending.page()
+                            pending.page(),
+                            pending.filterMode()
                     );
                 }));
     }
@@ -171,6 +182,7 @@ public final class ChatInputService {
             NoteType type,
             NotePriority priority,
             int page,
+            NoteFilterMode filterMode,
             Instant createdAt
     ) {
 

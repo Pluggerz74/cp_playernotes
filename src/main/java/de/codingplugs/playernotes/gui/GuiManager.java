@@ -2,6 +2,7 @@ package de.codingplugs.playernotes.gui;
 
 import de.codingplugs.playernotes.PlayerNotesPlugin;
 import de.codingplugs.playernotes.command.CommandSupport;
+import de.codingplugs.playernotes.model.NoteFilterMode;
 import de.codingplugs.playernotes.model.NotePriority;
 import de.codingplugs.playernotes.model.NoteType;
 import de.codingplugs.playernotes.model.PlayerNote;
@@ -51,7 +52,35 @@ public final class GuiManager {
     }
 
     public void openPlayerNotes(Player viewer, OfflinePlayer target, String targetName) {
-        plugin.notes().findByTarget(target.getUniqueId(), false).whenComplete((notes, error) ->
+        loadAndOpenPlayerNotes(viewer, target.getUniqueId(), targetName, 0, NoteFilterMode.ACTIVE);
+    }
+
+    public void openPlayerNotes(
+            Player viewer,
+            UUID targetUuid,
+            String targetName,
+            List<PlayerNote> notes,
+            int page,
+            NoteFilterMode filterMode
+    ) {
+        int noteSlots = itemBuilder.noteSlotCount();
+        int clampedPage = clampPage(page, notes.size(), noteSlots);
+        PlayerNotesGui menu = buildMenu(targetUuid, targetName, notes, clampedPage, filterMode);
+        Inventory inventory = Bukkit.createInventory(menu, itemBuilder.inventorySize(), itemBuilder.titleComponent(targetName));
+        menu.bindInventory(inventory);
+        populateInventory(menu, inventory);
+        openMenus.put(viewer.getUniqueId(), menu);
+        viewer.openInventory(inventory);
+    }
+
+    public void loadAndOpenPlayerNotes(
+            Player viewer,
+            UUID targetUuid,
+            String targetName,
+            int page,
+            NoteFilterMode filterMode
+    ) {
+        plugin.notes().findByTarget(targetUuid, filterMode).whenComplete((notes, error) ->
                 CommandSupport.runSync(plugin, () -> {
                     if (!viewer.isOnline()) {
                         return;
@@ -63,17 +92,8 @@ public final class GuiManager {
                         return;
                     }
 
-                    openPlayerNotes(viewer, target.getUniqueId(), targetName, notes, 0);
+                    openPlayerNotes(viewer, targetUuid, targetName, notes, page, filterMode);
                 }));
-    }
-
-    public void openPlayerNotes(Player viewer, UUID targetUuid, String targetName, List<PlayerNote> notes, int page) {
-        PlayerNotesGui menu = buildMenu(targetUuid, targetName, notes, page);
-        Inventory inventory = Bukkit.createInventory(menu, itemBuilder.inventorySize(), itemBuilder.titleComponent(targetName));
-        menu.bindInventory(inventory);
-        populateInventory(menu, inventory);
-        openMenus.put(viewer.getUniqueId(), menu);
-        viewer.openInventory(inventory);
     }
 
     public PlayerNotesGui getOpenMenu(UUID viewerUuid) {
@@ -88,8 +108,15 @@ public final class GuiManager {
         return messages;
     }
 
-    public void openNoteDetail(Player viewer, PlayerNote note, UUID targetUuid, String targetName, int page) {
-        NoteDetailGui detail = new NoteDetailGui(note, targetUuid, targetName, page);
+    public void openNoteDetail(
+            Player viewer,
+            PlayerNote note,
+            UUID targetUuid,
+            String targetName,
+            int page,
+            NoteFilterMode filterMode
+    ) {
+        NoteDetailGui detail = new NoteDetailGui(note, targetUuid, targetName, page, filterMode);
         Inventory inventory = Bukkit.createInventory(
                 detail,
                 itemBuilder.detailInventorySize(),
@@ -100,8 +127,14 @@ public final class GuiManager {
         viewer.openInventory(inventory);
     }
 
-    public void reopenPlayerNotes(Player viewer, UUID targetUuid, String targetName, int page) {
-        plugin.notes().findByTarget(targetUuid, false).whenComplete((notes, error) ->
+    public void reopenPlayerNotes(
+            Player viewer,
+            UUID targetUuid,
+            String targetName,
+            int page,
+            NoteFilterMode filterMode
+    ) {
+        plugin.notes().findByTarget(targetUuid, filterMode).whenComplete((notes, error) ->
                 CommandSupport.runSync(plugin, () -> {
                     if (!viewer.isOnline()) {
                         return;
@@ -113,7 +146,7 @@ public final class GuiManager {
                         return;
                     }
 
-                    openPlayerNotes(viewer, targetUuid, targetName, notes, page);
+                    openPlayerNotes(viewer, targetUuid, targetName, notes, page, filterMode);
                 }));
     }
 
@@ -134,7 +167,13 @@ public final class GuiManager {
 
                     messages.send(viewer, "command.archive-success", Map.of("id", String.valueOf(noteId)));
                     plugin.discord().notifyNoteArchived(noteId, viewer.getName());
-                    reopenPlayerNotes(viewer, detail.targetUuid(), detail.targetName(), detail.page());
+                    reopenPlayerNotes(
+                            viewer,
+                            detail.targetUuid(),
+                            detail.targetName(),
+                            detail.page(),
+                            detail.filterMode()
+                    );
                 }));
     }
 
@@ -155,12 +194,18 @@ public final class GuiManager {
 
                     messages.send(viewer, "command.remove-success", Map.of("id", String.valueOf(noteId)));
                     plugin.discord().notifyNoteDeleted(noteId, viewer.getName());
-                    reopenPlayerNotes(viewer, detail.targetUuid(), detail.targetName(), detail.page());
+                    reopenPlayerNotes(
+                            viewer,
+                            detail.targetUuid(),
+                            detail.targetName(),
+                            detail.page(),
+                            detail.filterMode()
+                    );
                 }));
     }
 
-    public void openTypeSelect(Player staff, UUID targetUuid, String targetName, int page) {
-        NoteTypeSelectGui menu = new NoteTypeSelectGui(targetUuid, targetName, page);
+    public void openTypeSelect(Player staff, UUID targetUuid, String targetName, int page, NoteFilterMode filterMode) {
+        NoteTypeSelectGui menu = new NoteTypeSelectGui(targetUuid, targetName, page, filterMode);
         Inventory inventory = Bukkit.createInventory(
                 menu,
                 itemBuilder.selectionInventorySize("type-select-menu"),
@@ -171,8 +216,15 @@ public final class GuiManager {
         staff.openInventory(inventory);
     }
 
-    public void openPrioritySelect(Player staff, UUID targetUuid, String targetName, NoteType type, int page) {
-        NotePrioritySelectGui menu = new NotePrioritySelectGui(targetUuid, targetName, type, page);
+    public void openPrioritySelect(
+            Player staff,
+            UUID targetUuid,
+            String targetName,
+            NoteType type,
+            int page,
+            NoteFilterMode filterMode
+    ) {
+        NotePrioritySelectGui menu = new NotePrioritySelectGui(targetUuid, targetName, type, page, filterMode);
         Inventory inventory = Bukkit.createInventory(
                 menu,
                 itemBuilder.selectionInventorySize("priority-select-menu"),
@@ -189,14 +241,34 @@ public final class GuiManager {
             String targetName,
             NoteType type,
             NotePriority priority,
-            int page
+            int page,
+            NoteFilterMode filterMode
     ) {
         staff.closeInventory();
-        plugin.chatInput().startInput(staff, targetUuid, targetName, type, priority, page);
+        plugin.chatInput().startInput(staff, targetUuid, targetName, type, priority, page, filterMode);
     }
 
-    private PlayerNotesGui buildMenu(UUID targetUuid, String targetName, List<PlayerNote> notes, int page) {
-        return new PlayerNotesGui(targetUuid, targetName, notes, page);
+    private PlayerNotesGui buildMenu(
+            UUID targetUuid,
+            String targetName,
+            List<PlayerNote> notes,
+            int page,
+            NoteFilterMode filterMode
+    ) {
+        return new PlayerNotesGui(targetUuid, targetName, notes, page, filterMode);
+    }
+
+    private static int totalPages(int noteCount, int noteSlotsPerPage) {
+        if (noteCount == 0 || noteSlotsPerPage <= 0) {
+            return 1;
+        }
+
+        return (int) Math.ceil(noteCount / (double) noteSlotsPerPage);
+    }
+
+    private static int clampPage(int page, int noteCount, int noteSlotsPerPage) {
+        int pages = totalPages(noteCount, noteSlotsPerPage);
+        return Math.max(0, Math.min(page, pages - 1));
     }
 
     private void populateInventory(PlayerNotesGui menu, Inventory inventory) {
@@ -207,6 +279,7 @@ public final class GuiManager {
         int criticalSlot = itemBuilder.slot("critical-notes", 14);
         int addSlot = itemBuilder.slot("add-note", 16);
         int previousSlot = itemBuilder.slot("previous", 45);
+        int filterSlot = itemBuilder.slot("filter", 48);
         int closeSlot = itemBuilder.slot("close", 49);
         int nextSlot = itemBuilder.slot("next", 53);
 
@@ -214,9 +287,8 @@ public final class GuiManager {
         interactiveSlots.add(totalSlot);
         interactiveSlots.add(criticalSlot);
         interactiveSlots.add(addSlot);
-        interactiveSlots.add(previousSlot);
+        interactiveSlots.add(filterSlot);
         interactiveSlots.add(closeSlot);
-        interactiveSlots.add(nextSlot);
 
         int noteSlots = itemBuilder.noteSlotCount();
         int noteStart = itemBuilder.slot("note-start", 28);
@@ -224,31 +296,60 @@ public final class GuiManager {
             interactiveSlots.add(noteStart + index);
         }
 
+        int noteCount = menu.notes().size();
+        int pages = totalPages(noteCount, noteSlots);
+        int currentPage = menu.page();
+        boolean hasPrevious = currentPage > 0;
+        boolean hasNext = currentPage < pages - 1;
+
+        if (hasPrevious) {
+            interactiveSlots.add(previousSlot);
+        }
+        if (hasNext) {
+            interactiveSlots.add(nextSlot);
+        }
+
         fillFrame(inventory, interactiveSlots);
 
-        int totalNotes = menu.notes().size();
         int criticalNotes = (int) menu.notes().stream().filter(PlayerNote::isCritical).count();
 
         inventory.setItem(profileSlot, itemBuilder.playerProfile(menu.targetName(), menu.targetUuid()));
-        inventory.setItem(totalSlot, itemBuilder.totalNotesStat(totalNotes));
+        inventory.setItem(totalSlot, itemBuilder.totalNotesStat(noteCount));
         inventory.setItem(criticalSlot, itemBuilder.criticalNotesStat(criticalNotes));
         inventory.setItem(addSlot, itemBuilder.addNoteButton());
-        inventory.setItem(previousSlot, itemBuilder.previousButton());
-        inventory.setItem(closeSlot, itemBuilder.closeButton());
-        inventory.setItem(nextSlot, itemBuilder.nextButton());
+        inventory.setItem(filterSlot, itemBuilder.filterButton(menu.filterMode()));
+        inventory.setItem(closeSlot, itemBuilder.closeButton(currentPage, pages));
+        inventory.setItem(
+                previousSlot,
+                hasPrevious
+                        ? itemBuilder.previousButtonEnabled(currentPage, pages)
+                        : itemBuilder.previousButtonDisabled()
+        );
+        inventory.setItem(
+                nextSlot,
+                hasNext
+                        ? itemBuilder.nextButtonEnabled(currentPage, pages)
+                        : itemBuilder.nextButtonDisabled()
+        );
 
         menu.registerAction(addSlot, new PlayerNotesGui.SlotAction(PlayerNotesGui.ActionType.ADD_NOTE, null));
-        menu.registerAction(previousSlot, new PlayerNotesGui.SlotAction(PlayerNotesGui.ActionType.PREVIOUS, null));
+        menu.registerAction(filterSlot, new PlayerNotesGui.SlotAction(PlayerNotesGui.ActionType.FILTER, null));
         menu.registerAction(closeSlot, new PlayerNotesGui.SlotAction(PlayerNotesGui.ActionType.CLOSE, null));
-        menu.registerAction(nextSlot, new PlayerNotesGui.SlotAction(PlayerNotesGui.ActionType.NEXT, null));
 
-        int startIndex = menu.page() * noteSlots;
+        if (hasPrevious) {
+            menu.registerAction(previousSlot, new PlayerNotesGui.SlotAction(PlayerNotesGui.ActionType.PREVIOUS, null));
+        }
+        if (hasNext) {
+            menu.registerAction(nextSlot, new PlayerNotesGui.SlotAction(PlayerNotesGui.ActionType.NEXT, null));
+        }
+
+        int startIndex = currentPage * noteSlots;
 
         for (int index = 0; index < noteSlots; index++) {
             int slot = noteStart + index;
             int noteIndex = startIndex + index;
 
-            if (noteIndex >= menu.notes().size()) {
+            if (noteIndex >= noteCount) {
                 inventory.setItem(slot, itemBuilder.innerPane());
                 continue;
             }
