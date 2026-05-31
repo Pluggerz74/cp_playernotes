@@ -36,6 +36,7 @@ discord:
   webhook-url: ""
   username: "PlayerNotes Pro"
   avatar-url: ""
+  debug-payload: false
   notify:
     note-created: true
     critical-note-created: true

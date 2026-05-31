@@ -7,6 +7,7 @@ de\codingplugs\playernotes\permission\Permissions.class
 de\codingplugs\playernotes\database\SQLiteDatabaseProvider.class
 de\codingplugs\playernotes\command\ArchiveSubCommand.class
 de\codingplugs\playernotes\model\NoteType.class
+de\codingplugs\playernotes\hook\WebhookResult.class
 de\codingplugs\playernotes\command\DebugSubCommand.class
 de\codingplugs\playernotes\command\ListSubCommand.class
 de\codingplugs\playernotes\database\package-info.class
@@ -61,4 +62,5 @@ de\codingplugs\playernotes\service\DiagnosticsService.class
 de\codingplugs\playernotes\util\package-info.class
 de\codingplugs\playernotes\gui\NoteDetailGui$ActionType.class
 de\codingplugs\playernotes\service\JoinAlertService.class
+de\codingplugs\playernotes\command\DiscordTestSubCommand.class
 de\codingplugs\playernotes\database\DatabaseFactory.class

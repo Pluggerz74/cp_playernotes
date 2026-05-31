@@ -1,5 +1,9 @@
 package de.codingplugs.playernotes.hook;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import de.codingplugs.playernotes.PlayerNotesPlugin;
 import de.codingplugs.playernotes.model.PlayerNote;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -9,15 +13,22 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 public final class DiscordWebhookService {
+
+    private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
 
     private static final int COLOR_DEFAULT = 0x3498DB;
     private static final int COLOR_CRITICAL = 0xE74C3C;
     private static final int COLOR_NEUTRAL = 0x95A5A6;
     private static final int MAX_FIELD_LENGTH = 1024;
+    private static final int MAX_TITLE_LENGTH = 256;
+    private static final int MAX_USERNAME_LENGTH = 80;
+    private static final String PLUGIN_DISPLAY_NAME = "PlayerNotes Pro";
 
     private final PlayerNotesPlugin plugin;
     private final HttpClient httpClient;
@@ -33,6 +44,35 @@ public final class DiscordWebhookService {
         // Configuration is read on each request so reload requires no extra work.
     }
 
+    public CompletableFuture<WebhookResult> sendTest(String senderName) {
+        if (!config().getBoolean("discord.enabled", false)) {
+            plugin.getLogger().warning("[Discord] Webhook test skipped: discord.enabled is false.");
+            return CompletableFuture.completedFuture(WebhookResult.failure(0, "Discord webhooks are disabled."));
+        }
+
+        String url = webhookUrl();
+        if (url.isBlank()) {
+            plugin.getLogger().warning("[Discord] Webhook test skipped: discord.webhook-url is empty.");
+            return CompletableFuture.completedFuture(WebhookResult.failure(0, "Webhook URL is empty."));
+        }
+
+        if (!isValidDiscordWebhookUrl(url)) {
+            plugin.getLogger().warning(
+                    "[Discord] Webhook test skipped: discord.webhook-url must start with "
+                            + "https://discord.com/api/webhooks/ or https://discordapp.com/api/webhooks/"
+            );
+            return CompletableFuture.completedFuture(WebhookResult.failure(0, "Invalid Discord webhook URL."));
+        }
+
+        String payload = buildPayload("Webhook Test", COLOR_DEFAULT, List.of(
+                field("Plugin", PLUGIN_DISPLAY_NAME),
+                field("Sender", senderName),
+                field("Server", plugin.getServer().getName())
+        ));
+
+        return sendPayload(url, payload);
+    }
+
     public void notifyNoteCreated(PlayerNote note) {
         if (!isActive() || note == null) {
             return;
@@ -44,7 +84,7 @@ public final class DiscordWebhookService {
                     field("Staff", note.getStaffName()),
                     field("Type", note.getType().name()),
                     field("Priority", note.getPriority().name()),
-                    field("Content", truncate(note.getContent()), false)
+                    field("Content", note.getContent(), false)
             ));
             return;
         }
@@ -55,7 +95,7 @@ public final class DiscordWebhookService {
                     field("Staff", note.getStaffName()),
                     field("Type", note.getType().name()),
                     field("Priority", note.getPriority().name()),
-                    field("Content", truncate(note.getContent()), false)
+                    field("Content", note.getContent(), false)
             ));
         }
     }
@@ -94,13 +134,21 @@ public final class DiscordWebhookService {
     }
 
     private void sendEmbed(String title, int color, List<EmbedField> fields) {
-        String webhookUrl = webhookUrl();
-        if (webhookUrl.isBlank()) {
+        String url = webhookUrl();
+        if (url.isBlank()) {
             return;
         }
 
         String payload = buildPayload(title, color, fields);
 
+        sendPayload(url, payload).whenComplete((result, error) -> {
+            if (error != null) {
+                plugin.getLogger().log(Level.WARNING, "Failed to send Discord webhook", error);
+            }
+        });
+    }
+
+    private CompletableFuture<WebhookResult> sendPayload(String webhookUrl, String payload) {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(webhookUrl))
                 .timeout(Duration.ofSeconds(15))
@@ -108,54 +156,76 @@ public final class DiscordWebhookService {
                 .POST(HttpRequest.BodyPublishers.ofString(payload))
                 .build();
 
-        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .whenComplete((response, error) -> {
+        return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .handle((response, error) -> {
                     if (error != null) {
-                        plugin.getLogger().log(Level.WARNING, "Failed to send Discord webhook", error);
-                        return;
+                        return WebhookResult.failure(0, error.getMessage());
                     }
 
                     int status = response.statusCode();
-                    if (status < 200 || status >= 300) {
-                        plugin.getLogger().log(
-                                Level.WARNING,
-                                "Discord webhook returned HTTP " + status + ": " + response.body()
-                        );
+                    if (status >= 200 && status < 300) {
+                        return WebhookResult.success(status);
                     }
+
+                    String body = response.body();
+                    plugin.getLogger().log(
+                            Level.WARNING,
+                            "Discord webhook returned HTTP " + status + ": " + body
+                    );
+                    return WebhookResult.httpFailure(status, body);
                 });
     }
 
     private String buildPayload(String title, int color, List<EmbedField> fields) {
-        StringBuilder json = new StringBuilder(256);
-        json.append('{');
+        JsonObject root = new JsonObject();
+        root.addProperty("username", truncate(username(), MAX_USERNAME_LENGTH));
 
-        appendJsonString(json, "username", username());
-        String avatarUrl = avatarUrl();
-        if (!avatarUrl.isBlank()) {
-            json.append(',');
-            appendJsonString(json, "avatar_url", avatarUrl);
+        String avatar = avatarUrl();
+        if (!avatar.isBlank()) {
+            root.addProperty("avatar_url", avatar);
         }
 
-        json.append(",\"embeds\":[{");
-        appendJsonString(json, "title", title);
-        json.append(",\"color\":").append(color);
-        json.append(",\"fields\":[");
+        JsonObject embed = new JsonObject();
+        embed.addProperty("title", truncate(title, MAX_TITLE_LENGTH));
+        embed.addProperty("color", color);
+        embed.addProperty("timestamp", Instant.now().toString());
 
-        for (int index = 0; index < fields.size(); index++) {
-            if (index > 0) {
-                json.append(',');
+        JsonArray fieldsArray = new JsonArray();
+        for (EmbedField embedField : fields) {
+            if (embedField.name() == null || embedField.name().isBlank()) {
+                continue;
+            }
+            if (embedField.value() == null || embedField.value().isBlank()) {
+                continue;
             }
 
-            EmbedField embedField = fields.get(index);
-            json.append('{');
-            appendJsonString(json, "name", embedField.name());
-            appendJsonString(json, "value", embedField.value());
-            json.append(",\"inline\":").append(embedField.inline());
-            json.append('}');
+            JsonObject fieldObject = new JsonObject();
+            fieldObject.addProperty("name", truncate(embedField.name(), MAX_FIELD_LENGTH));
+            fieldObject.addProperty("value", truncate(embedField.value(), MAX_FIELD_LENGTH));
+            fieldObject.addProperty("inline", embedField.inline());
+            fieldsArray.add(fieldObject);
         }
 
-        json.append("]}]}");
-        return json.toString();
+        embed.add("fields", fieldsArray);
+
+        JsonArray embeds = new JsonArray();
+        embeds.add(embed);
+        root.add("embeds", embeds);
+
+        String payload = GSON.toJson(root);
+        logPayload(payload);
+        return payload;
+    }
+
+    private void logPayload(String payload) {
+        if (config().getBoolean("discord.debug-payload", false)) {
+            plugin.getLogger().info("[Discord] Webhook payload: " + payload);
+            return;
+        }
+
+        if (config().getBoolean("debug", false)) {
+            plugin.getLogger().log(Level.FINE, "[Discord] Webhook payload: " + payload);
+        }
     }
 
     private static EmbedField field(String name, String value) {
@@ -166,46 +236,16 @@ public final class DiscordWebhookService {
         return new EmbedField(name, value, inline);
     }
 
-    private static String truncate(String value) {
+    private static String truncate(String value, int maxLength) {
         if (value == null) {
             return "";
         }
 
-        if (value.length() <= MAX_FIELD_LENGTH) {
+        if (value.length() <= maxLength) {
             return value;
         }
 
-        return value.substring(0, MAX_FIELD_LENGTH - 3) + "...";
-    }
-
-    private static void appendJsonString(StringBuilder json, String key, String value) {
-        json.append('"').append(escapeJson(key)).append("\":\"").append(escapeJson(value)).append('"');
-    }
-
-    private static String escapeJson(String value) {
-        if (value == null || value.isEmpty()) {
-            return "";
-        }
-
-        StringBuilder escaped = new StringBuilder(value.length() + 8);
-        for (int index = 0; index < value.length(); index++) {
-            char character = value.charAt(index);
-            switch (character) {
-                case '\\' -> escaped.append("\\\\");
-                case '"' -> escaped.append("\\\"");
-                case '\n' -> escaped.append("\\n");
-                case '\r' -> escaped.append("\\r");
-                case '\t' -> escaped.append("\\t");
-                default -> {
-                    if (character < 0x20) {
-                        escaped.append(String.format("\\u%04x", (int) character));
-                    } else {
-                        escaped.append(character);
-                    }
-                }
-            }
-        }
-        return escaped.toString();
+        return value.substring(0, maxLength - 3) + "...";
     }
 
     private boolean isActive() {
@@ -221,8 +261,13 @@ public final class DiscordWebhookService {
     }
 
     private String username() {
-        String configured = config().getString("discord.username", "PlayerNotes Pro");
-        return configured == null || configured.isBlank() ? "PlayerNotes Pro" : configured;
+        String configured = config().getString("discord.username", PLUGIN_DISPLAY_NAME);
+        return configured == null || configured.isBlank() ? PLUGIN_DISPLAY_NAME : configured;
+    }
+
+    private static boolean isValidDiscordWebhookUrl(String url) {
+        return url.startsWith("https://discord.com/api/webhooks/")
+                || url.startsWith("https://discordapp.com/api/webhooks/");
     }
 
     private String avatarUrl() {

@@ -1,6 +1,7 @@
 package de.codingplugs.playernotes;
 
 import de.codingplugs.playernotes.command.DebugSubCommand;
+import de.codingplugs.playernotes.command.DiscordTestSubCommand;
 import de.codingplugs.playernotes.command.AddSubCommand;
 import de.codingplugs.playernotes.command.ArchiveSubCommand;
 import de.codingplugs.playernotes.command.ListSubCommand;
@@ -174,7 +175,8 @@ public final class PlayerNotesPlugin extends JavaPlugin {
                 new RemoveSubCommand(this, messageService),
                 new VersionSubCommand(this, messageService),
                 new ReloadSubCommand(this, messageService),
-                new DebugSubCommand(this, messageService)
+                new DebugSubCommand(this, messageService),
+                new DiscordTestSubCommand(this, messageService)
         );
 
         ViewPlayerCommand viewPlayerCommand = new ViewPlayerCommand(this, messageService, guiManager);

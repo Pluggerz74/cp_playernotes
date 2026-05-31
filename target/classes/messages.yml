@@ -1,7 +1,7 @@
 prefix: "<gray>[</gray><aqua>PlayerNotes</aqua><gray>]</gray> "
 
 command:
-  usage: "<prefix><gray>Usage:</gray> <white>/pn <player|add|list|archive|remove|version|reload|debug></white>"
+  usage: "<prefix><gray>Usage:</gray> <white>/pn <player|add|list|archive|remove|version|reload|debug|discordtest></white>"
   unknown: "<prefix><red>Unknown subcommand.</red> <gray>Try</gray> <white>/pn version</white>"
   no-permission: "<prefix><red>You do not have permission to do that.</red>"
   error: "<prefix><red>Something went wrong. Check the console for details.</red>"
@@ -52,6 +52,10 @@ command:
   debug-discord-disabled: "disabled"
   debug-discord-enabled-configured: "enabled / configured"
   debug-discord-enabled-unconfigured: "enabled / not configured"
+  discordtest-sending: "<gray>Sending Discord webhook test...</gray>"
+  discordtest-success: "<green>✔ Discord webhook test sent successfully.</green>"
+  discordtest-http-failure: "<red>Discord webhook failed with HTTP <status>.</red>"
+  discordtest-error: "<red>Discord webhook test failed. Check console.</red>"
 
 gui:
   console-no-gui: "<prefix><gray>Only players can open the notes GUI.</gray> <dark_gray>Use /pn list <player></dark_gray>"
