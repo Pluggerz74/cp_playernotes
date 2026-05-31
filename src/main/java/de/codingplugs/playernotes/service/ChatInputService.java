@@ -30,14 +30,24 @@ public final class ChatInputService {
         this.guiManager = guiManager;
     }
 
-    public void startInput(Player staff, UUID targetUuid, String targetName) {
+    public void startInput(
+            Player staff,
+            UUID targetUuid,
+            String targetName,
+            NoteType type,
+            NotePriority priority,
+            int page
+    ) {
         UUID staffUuid = staff.getUniqueId();
         cancelInput(staffUuid);
 
-        PendingInput pending = new PendingInput(targetUuid, targetName, Instant.now());
+        PendingInput pending = new PendingInput(targetUuid, targetName, type, priority, page, Instant.now());
         pendingInputs.put(staffUuid, pending);
 
-        messages.send(staff, "chat-input.start");
+        messages.send(staff, "chat-input.start", Map.of(
+                "type", type.name(),
+                "priority", priority.name()
+        ));
         scheduleTimeout(staffUuid, pending.createdAt());
     }
 
@@ -98,8 +108,8 @@ public final class ChatInputService {
                 pending.targetName(),
                 staff.getUniqueId(),
                 staff.getName(),
-                NoteType.INFO,
-                NotePriority.NORMAL,
+                pending.type(),
+                pending.priority(),
                 content,
                 now,
                 now,
@@ -128,10 +138,11 @@ public final class ChatInputService {
                             "player", pending.targetName()
                     ));
 
-                    guiManager.openPlayerNotes(
+                    guiManager.reopenPlayerNotes(
                             staff,
-                            Bukkit.getOfflinePlayer(pending.targetUuid()),
-                            pending.targetName()
+                            pending.targetUuid(),
+                            pending.targetName(),
+                            pending.page()
                     );
                 }));
     }
@@ -152,7 +163,14 @@ public final class ChatInputService {
         }, TIMEOUT_TICKS);
     }
 
-    public record PendingInput(UUID targetUuid, String targetName, Instant createdAt) {
+    public record PendingInput(
+            UUID targetUuid,
+            String targetName,
+            NoteType type,
+            NotePriority priority,
+            int page,
+            Instant createdAt
+    ) {
 
         private static final long TIMEOUT_SECONDS = 60;
 

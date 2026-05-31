@@ -31,6 +31,10 @@ public final class GuiClickListener implements Listener {
             handlePlayerNotesClick(event, menu);
         } else if (holder instanceof NoteDetailGui detail) {
             handleNoteDetailClick(event, detail);
+        } else if (holder instanceof NoteTypeSelectGui typeSelect) {
+            handleTypeSelectClick(event, typeSelect);
+        } else if (holder instanceof NotePrioritySelectGui prioritySelect) {
+            handlePrioritySelectClick(event, prioritySelect);
         }
     }
 
@@ -87,14 +91,92 @@ public final class GuiClickListener implements Listener {
         }
     }
 
+    private void handleTypeSelectClick(InventoryClickEvent event, NoteTypeSelectGui menu) {
+        event.setCancelled(true);
+
+        if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+
+        if (event.getClickedInventory() == null || event.getClickedInventory().getHolder() != menu) {
+            return;
+        }
+
+        NoteTypeSelectGui.SlotAction action = menu.actionForSlot(event.getSlot());
+        if (action == null) {
+            return;
+        }
+
+        switch (action.type()) {
+            case CLOSE -> player.closeInventory();
+            case BACK -> guiManager.reopenPlayerNotes(
+                    player,
+                    menu.targetUuid(),
+                    menu.targetName(),
+                    menu.page()
+            );
+            case SELECT -> {
+                if (action.noteType() == null) {
+                    return;
+                }
+                guiManager.openPrioritySelect(
+                        player,
+                        menu.targetUuid(),
+                        menu.targetName(),
+                        action.noteType(),
+                        menu.page()
+                );
+            }
+        }
+    }
+
+    private void handlePrioritySelectClick(InventoryClickEvent event, NotePrioritySelectGui menu) {
+        event.setCancelled(true);
+
+        if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+
+        if (event.getClickedInventory() == null || event.getClickedInventory().getHolder() != menu) {
+            return;
+        }
+
+        NotePrioritySelectGui.SlotAction action = menu.actionForSlot(event.getSlot());
+        if (action == null) {
+            return;
+        }
+
+        switch (action.type()) {
+            case CLOSE -> player.closeInventory();
+            case BACK -> guiManager.openTypeSelect(
+                    player,
+                    menu.targetUuid(),
+                    menu.targetName(),
+                    menu.page()
+            );
+            case SELECT -> {
+                if (action.priority() == null) {
+                    return;
+                }
+                guiManager.startNoteTextInput(
+                        player,
+                        menu.targetUuid(),
+                        menu.targetName(),
+                        menu.noteType(),
+                        action.priority(),
+                        menu.page()
+                );
+            }
+        }
+    }
+
     private void handleAddNote(Player player, PlayerNotesGui menu) {
         if (!CommandSupport.hasPermission(player, Permissions.ADD)) {
             guiManager.messages().send(player, "command.no-permission");
             return;
         }
 
-        player.closeInventory();
-        chatInputService.startInput(player, menu.targetUuid(), menu.targetName());
+        guiManager.openTypeSelect(player, menu.targetUuid(), menu.targetName(), menu.page());
     }
 
     private void handleNoteClick(Player player, PlayerNotesGui menu, Long noteId) {
@@ -132,7 +214,10 @@ public final class GuiClickListener implements Listener {
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
         InventoryHolder holder = event.getInventory().getHolder();
-        if (holder instanceof PlayerNotesGui || holder instanceof NoteDetailGui) {
+        if (holder instanceof PlayerNotesGui
+                || holder instanceof NoteDetailGui
+                || holder instanceof NoteTypeSelectGui
+                || holder instanceof NotePrioritySelectGui) {
             event.setCancelled(true);
         }
     }

@@ -37,7 +37,7 @@ gui:
   note-detail: "<prefix><white>Note #<id></white> <gray>for</gray> <aqua><player></aqua> <dark_gray>(<type> · <priority>)</dark_gray> <white><content></white> <dark_gray>— <date> by <staff></dark_gray>"
 
 chat-input:
-  start: "<gray>Type your note in chat. Type <red>cancel</red> to cancel.</gray>"
+  start: "<gray>Type your note in chat. Type <red>cancel</red> to cancel.</gray> <dark_gray>(<type> / <priority>)</dark_gray>"
   cancelled: "<red>Note creation cancelled.</red>"
   timeout: "<red>Note creation timed out.</red>"
   saved: "<green>✔ Note added for <white><player></white>.</green> <gray>ID: #<id></gray>"

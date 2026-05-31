@@ -2,6 +2,8 @@ package de.codingplugs.playernotes.gui;
 
 import de.codingplugs.playernotes.PlayerNotesPlugin;
 import de.codingplugs.playernotes.command.CommandSupport;
+import de.codingplugs.playernotes.model.NotePriority;
+import de.codingplugs.playernotes.model.NoteType;
 import de.codingplugs.playernotes.model.PlayerNote;
 import de.codingplugs.playernotes.service.MessageService;
 import org.bukkit.Bukkit;
@@ -155,6 +157,42 @@ public final class GuiManager {
                 }));
     }
 
+    public void openTypeSelect(Player staff, UUID targetUuid, String targetName, int page) {
+        NoteTypeSelectGui menu = new NoteTypeSelectGui(targetUuid, targetName, page);
+        Inventory inventory = Bukkit.createInventory(
+                menu,
+                itemBuilder.selectionInventorySize("type-select-menu"),
+                itemBuilder.typeSelectTitleComponent(targetName)
+        );
+        menu.bindInventory(inventory);
+        populateTypeSelectInventory(menu, inventory);
+        staff.openInventory(inventory);
+    }
+
+    public void openPrioritySelect(Player staff, UUID targetUuid, String targetName, NoteType type, int page) {
+        NotePrioritySelectGui menu = new NotePrioritySelectGui(targetUuid, targetName, type, page);
+        Inventory inventory = Bukkit.createInventory(
+                menu,
+                itemBuilder.selectionInventorySize("priority-select-menu"),
+                itemBuilder.prioritySelectTitleComponent(targetName)
+        );
+        menu.bindInventory(inventory);
+        populatePrioritySelectInventory(menu, inventory);
+        staff.openInventory(inventory);
+    }
+
+    public void startNoteTextInput(
+            Player staff,
+            UUID targetUuid,
+            String targetName,
+            NoteType type,
+            NotePriority priority,
+            int page
+    ) {
+        staff.closeInventory();
+        plugin.chatInput().startInput(staff, targetUuid, targetName, type, priority, page);
+    }
+
     private PlayerNotesGui buildMenu(UUID targetUuid, String targetName, List<PlayerNote> notes, int page) {
         return new PlayerNotesGui(targetUuid, targetName, notes, page);
     }
@@ -291,6 +329,69 @@ public final class GuiManager {
     }
 
     private void fillDetailFrame(Inventory inventory, Set<Integer> interactiveSlots) {
+        fillSmallFrame(inventory, interactiveSlots, DETAIL_ACCENT_SLOTS);
+    }
+
+    private void populateTypeSelectInventory(NoteTypeSelectGui menu, Inventory inventory) {
+        Set<Integer> interactiveSlots = new HashSet<>();
+
+        int infoSlot = itemBuilder.selectionSlot("type-select-menu", "info", 10);
+        int warningSlot = itemBuilder.selectionSlot("type-select-menu", "warning", 11);
+        int suspectSlot = itemBuilder.selectionSlot("type-select-menu", "suspect", 12);
+        int punishmentSlot = itemBuilder.selectionSlot("type-select-menu", "punishment", 13);
+        int staffSlot = itemBuilder.selectionSlot("type-select-menu", "staff", 14);
+        int backSlot = itemBuilder.selectionSlot("type-select-menu", "back", 16);
+        int closeSlot = itemBuilder.selectionSlot("type-select-menu", "close", 22);
+
+        interactiveSlots.addAll(Set.of(infoSlot, warningSlot, suspectSlot, punishmentSlot, staffSlot, backSlot, closeSlot));
+        fillSmallFrame(inventory, interactiveSlots, DETAIL_ACCENT_SLOTS);
+
+        inventory.setItem(infoSlot, itemBuilder.typeOptionItem(NoteType.INFO));
+        inventory.setItem(warningSlot, itemBuilder.typeOptionItem(NoteType.WARNING));
+        inventory.setItem(suspectSlot, itemBuilder.typeOptionItem(NoteType.SUSPECT));
+        inventory.setItem(punishmentSlot, itemBuilder.typeOptionItem(NoteType.PUNISHMENT));
+        inventory.setItem(staffSlot, itemBuilder.typeOptionItem(NoteType.STAFF));
+        inventory.setItem(backSlot, itemBuilder.selectionBackButton("type-select-menu"));
+        inventory.setItem(closeSlot, itemBuilder.selectionCloseButton("type-select-menu"));
+
+        menu.registerAction(infoSlot, new NoteTypeSelectGui.SlotAction(NoteTypeSelectGui.ActionType.SELECT, NoteType.INFO));
+        menu.registerAction(warningSlot, new NoteTypeSelectGui.SlotAction(NoteTypeSelectGui.ActionType.SELECT, NoteType.WARNING));
+        menu.registerAction(suspectSlot, new NoteTypeSelectGui.SlotAction(NoteTypeSelectGui.ActionType.SELECT, NoteType.SUSPECT));
+        menu.registerAction(punishmentSlot, new NoteTypeSelectGui.SlotAction(NoteTypeSelectGui.ActionType.SELECT, NoteType.PUNISHMENT));
+        menu.registerAction(staffSlot, new NoteTypeSelectGui.SlotAction(NoteTypeSelectGui.ActionType.SELECT, NoteType.STAFF));
+        menu.registerAction(backSlot, new NoteTypeSelectGui.SlotAction(NoteTypeSelectGui.ActionType.BACK, null));
+        menu.registerAction(closeSlot, new NoteTypeSelectGui.SlotAction(NoteTypeSelectGui.ActionType.CLOSE, null));
+    }
+
+    private void populatePrioritySelectInventory(NotePrioritySelectGui menu, Inventory inventory) {
+        Set<Integer> interactiveSlots = new HashSet<>();
+
+        int lowSlot = itemBuilder.selectionSlot("priority-select-menu", "low", 10);
+        int normalSlot = itemBuilder.selectionSlot("priority-select-menu", "normal", 11);
+        int highSlot = itemBuilder.selectionSlot("priority-select-menu", "high", 12);
+        int criticalSlot = itemBuilder.selectionSlot("priority-select-menu", "critical", 13);
+        int backSlot = itemBuilder.selectionSlot("priority-select-menu", "back", 16);
+        int closeSlot = itemBuilder.selectionSlot("priority-select-menu", "close", 22);
+
+        interactiveSlots.addAll(Set.of(lowSlot, normalSlot, highSlot, criticalSlot, backSlot, closeSlot));
+        fillSmallFrame(inventory, interactiveSlots, DETAIL_ACCENT_SLOTS);
+
+        inventory.setItem(lowSlot, itemBuilder.priorityOptionItem(NotePriority.LOW));
+        inventory.setItem(normalSlot, itemBuilder.priorityOptionItem(NotePriority.NORMAL));
+        inventory.setItem(highSlot, itemBuilder.priorityOptionItem(NotePriority.HIGH));
+        inventory.setItem(criticalSlot, itemBuilder.priorityOptionItem(NotePriority.CRITICAL));
+        inventory.setItem(backSlot, itemBuilder.selectionBackButton("priority-select-menu"));
+        inventory.setItem(closeSlot, itemBuilder.selectionCloseButton("priority-select-menu"));
+
+        menu.registerAction(lowSlot, new NotePrioritySelectGui.SlotAction(NotePrioritySelectGui.ActionType.SELECT, NotePriority.LOW));
+        menu.registerAction(normalSlot, new NotePrioritySelectGui.SlotAction(NotePrioritySelectGui.ActionType.SELECT, NotePriority.NORMAL));
+        menu.registerAction(highSlot, new NotePrioritySelectGui.SlotAction(NotePrioritySelectGui.ActionType.SELECT, NotePriority.HIGH));
+        menu.registerAction(criticalSlot, new NotePrioritySelectGui.SlotAction(NotePrioritySelectGui.ActionType.SELECT, NotePriority.CRITICAL));
+        menu.registerAction(backSlot, new NotePrioritySelectGui.SlotAction(NotePrioritySelectGui.ActionType.BACK, null));
+        menu.registerAction(closeSlot, new NotePrioritySelectGui.SlotAction(NotePrioritySelectGui.ActionType.CLOSE, null));
+    }
+
+    private void fillSmallFrame(Inventory inventory, Set<Integer> interactiveSlots, Set<Integer> accentSlots) {
         int size = inventory.getSize();
 
         for (int slot = 0; slot < size; slot++) {
@@ -300,7 +401,7 @@ public final class GuiManager {
 
             if (isBorder(slot, size)) {
                 inventory.setItem(slot, itemBuilder.borderPane());
-            } else if (DETAIL_ACCENT_SLOTS.contains(slot)) {
+            } else if (accentSlots.contains(slot)) {
                 inventory.setItem(slot, itemBuilder.accentPane());
             } else {
                 inventory.setItem(slot, itemBuilder.innerPane());

@@ -1,5 +1,7 @@
 package de.codingplugs.playernotes.gui;
 
+import de.codingplugs.playernotes.model.NotePriority;
+import de.codingplugs.playernotes.model.NoteType;
 import de.codingplugs.playernotes.PlayerNotesPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -250,6 +252,97 @@ public final class GuiItemBuilder {
             return Material.ORANGE_DYE;
         }
         return Material.PAPER;
+    }
+
+    public Component typeSelectTitleComponent(String playerName) {
+        return selectionTitle("type-select-menu.title", playerName);
+    }
+
+    public Component prioritySelectTitleComponent(String playerName) {
+        return selectionTitle("priority-select-menu.title", playerName);
+    }
+
+    public int selectionInventorySize(String section) {
+        int size = gui().getInt(section + ".size", 27);
+        if (size % 9 != 0 || size < 9 || size > 54) {
+            return 27;
+        }
+        return size;
+    }
+
+    public int selectionSlot(String section, String path, int fallback) {
+        return gui().getInt(section + ".slots." + path, fallback);
+    }
+
+    public ItemStack typeOptionItem(NoteType type) {
+        return labeledItemFromSection(
+                "type-select-menu",
+                typeSelectMaterial(type),
+                "labels.option-name",
+                "labels.option-lore",
+                Map.of("type", type.name())
+        );
+    }
+
+    public ItemStack priorityOptionItem(NotePriority priority) {
+        return labeledItemFromSection(
+                "priority-select-menu",
+                prioritySelectMaterial(priority),
+                "labels.option-name",
+                "labels.option-lore",
+                Map.of("priority", priority.name())
+        );
+    }
+
+    public ItemStack selectionBackButton(String section) {
+        return labeledItemFromSection(
+                section,
+                Material.ARROW,
+                "labels.back-name",
+                "labels.back-lore",
+                Collections.emptyMap()
+        );
+    }
+
+    public ItemStack selectionCloseButton(String section) {
+        return labeledItemFromSection(
+                section,
+                getMaterial("materials.close", Material.BARRIER),
+                "labels.close-name",
+                "labels.close-lore",
+                Collections.emptyMap()
+        );
+    }
+
+    public Material typeSelectMaterial(NoteType type) {
+        return switch (type) {
+            case INFO -> Material.PAPER;
+            case WARNING -> Material.ORANGE_DYE;
+            case SUSPECT -> firstAvailable(Material.SPYGLASS, Material.COMPASS);
+            case PUNISHMENT -> Material.IRON_AXE;
+            case STAFF -> Material.NAME_TAG;
+        };
+    }
+
+    public Material prioritySelectMaterial(NotePriority priority) {
+        return switch (priority) {
+            case LOW -> Material.LIME_DYE;
+            case NORMAL -> Material.LIGHT_BLUE_DYE;
+            case HIGH -> Material.ORANGE_DYE;
+            case CRITICAL -> Material.RED_DYE;
+        };
+    }
+
+    private Component selectionTitle(String path, String playerName) {
+        String template = gui().getString(
+                path,
+                "<gradient:#ffffff:#60a5fa><bold>Select</bold></gradient> <dark_gray>·</dark_gray> <gray><player></gray>"
+        );
+        return MINI_MESSAGE.deserialize(template, TagResolver.resolver(Placeholder.unparsed("player", playerName)));
+    }
+
+    private Material firstAvailable(Material primary, Material fallback) {
+        return primary.isItem() ? primary : fallback;
     }
 
     private ItemStack labeledItemFromSection(

@@ -105,3 +105,50 @@ detail-menu:
     close-name: "<red><bold>Close</bold></red>"
     close-lore:
       - "<gray>Close this menu</gray>"
+
+type-select-menu:
+  title: "<gradient:#ffffff:#60a5fa><bold>Select Type</bold></gradient> <dark_gray>·</dark_gray> <gray><player></gray>"
+  size: 27
+
+  slots:
+    info: 10
+    warning: 11
+    suspect: 12
+    punishment: 13
+    staff: 14
+    back: 16
+    close: 22
+
+  labels:
+    option-name: "<white><bold><type></bold></white>"
+    option-lore:
+      - "<gray>Click to select this type</gray>"
+    back-name: "<aqua><bold>Back</bold></aqua>"
+    back-lore:
+      - "<gray>Return to player notes</gray>"
+    close-name: "<red><bold>Close</bold></red>"
+    close-lore:
+      - "<gray>Close this menu</gray>"
+
+priority-select-menu:
+  title: "<gradient:#ffffff:#60a5fa><bold>Select Priority</bold></gradient> <dark_gray>·</dark_gray> <gray><player></gray>"
+  size: 27
+
+  slots:
+    low: 10
+    normal: 11
+    high: 12
+    critical: 13
+    back: 16
+    close: 22
+
+  labels:
+    option-name: "<white><bold><priority></bold></white>"
+    option-lore:
+      - "<gray>Click to select this priority</gray>"
+    back-name: "<aqua><bold>Back</bold></aqua>"
+    back-lore:
+      - "<gray>Return to type selection</gray>"
+    close-name: "<red><bold>Close</bold></red>"
+    close-lore:
+      - "<gray>Close this menu</gray>"
