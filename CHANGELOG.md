@@ -2,6 +2,19 @@
 
 All notable changes to **PlayerNotes Pro** (`cp_playernotes`) are documented here.
 
+## [0.9.2-beta] — 2026-05-31
+
+### Added
+- GUI pagination (7 notes per page with previous/next navigation)
+- Archive filter toggle (ACTIVE / ARCHIVED / ALL) in the notes GUI
+- Note editing from the detail GUI (chat input flow)
+- `/pn edit <id> <new text>` command
+- `playernotes.edit` permission
+
+### Changed
+- Page and filter state preserved across detail view, archive/delete, and chat input flows
+- Empty pages clamp to the last available page after archive or delete
+
 ## [0.9.1-beta] — 2026-05-31
 
 ### Fixed

@@ -2,7 +2,7 @@
 
 Staff moderation notes for Minecraft servers — track player history, flag high-risk joins, and keep your team aligned with a polished GUI and optional integrations.
 
-**Current beta:** `0.9.1-beta`
+**Current beta:** `0.9.2-beta`
 
 > **Beta status:** This release is intended for testing on Paper, Purpur, and Spigot (1.19.4 – 1.21.x). Features and configuration may change before a stable release. Please report issues with `/pn debug` output and relevant console logs.
 
@@ -62,7 +62,7 @@ Staff moderation notes for Minecraft servers — track player history, flag high
 ### Installation
 
 1. Build the plugin (see [Build](#build)) or use a provided beta JAR.
-2. Copy `cp_playernotes-0.9.1-beta.jar` into your server's `plugins/` folder.
+2. Copy `cp_playernotes-0.9.2-beta.jar` into your server's `plugins/` folder.
 3. Start the server once to generate default config files.
 4. Stop the server, edit configuration (see checklist below), then start again — or use `/pn reload` after editing live configs.
 
@@ -221,7 +221,7 @@ From the project root:
 mvn clean package
 ```
 
-Output: `target/cp_playernotes-0.9.1-beta.jar`
+Output: `target/cp_playernotes-0.9.2-beta.jar`
 
 If Maven is not on your PATH:
 
