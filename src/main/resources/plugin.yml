@@ -9,13 +9,24 @@ authors:
 commands:
   pn:
     description: PlayerNotes commands
-    usage: /<command> <version|reload>
-    permission: playernotes.use
+    usage: /<command> <player|add|list|archive|remove|version|reload>
 
 permissions:
   playernotes.use:
     description: Access /pn version
     default: true
+  playernotes.view:
+    description: View player notes
+    default: op
+  playernotes.add:
+    description: Add player notes
+    default: op
+  playernotes.archive:
+    description: Archive player notes
+    default: op
+  playernotes.remove:
+    description: Permanently remove player notes
+    default: op
   playernotes.reload:
     description: Reload plugin configuration
     default: op
@@ -24,4 +35,8 @@ permissions:
     default: op
     children:
       playernotes.use: true
+      playernotes.view: true
+      playernotes.add: true
+      playernotes.archive: true
+      playernotes.remove: true
       playernotes.reload: true

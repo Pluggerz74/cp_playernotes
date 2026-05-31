@@ -1,9 +1,13 @@
 prefix: "<gray>[</gray><aqua>PlayerNotes</aqua><gray>]</gray> "
 
 command:
-  usage: "<prefix><gray>Usage:</gray> <white>/pn <version|reload></white>"
+  usage: "<prefix><gray>Usage:</gray> <white>/pn <player|add|list|archive|remove|version|reload></white>"
   unknown: "<prefix><red>Unknown subcommand.</red> <gray>Try</gray> <white>/pn version</white>"
   no-permission: "<prefix><red>You do not have permission to do that.</red>"
+  error: "<prefix><red>Something went wrong. Check the console for details.</red>"
+  player-not-found: "<prefix><red>Player not found:</red> <white><player></white>"
+  invalid-id: "<prefix><red>Invalid note id.</red> <gray>Use a positive number.</gray>"
+  note-not-found: "<prefix><red>No active note found with id</red> <white>#<id></white><red>.</red>"
   version: |
     <gray>Plugin:</gray> <white><plugin></white>
     <gray>Version:</gray> <white><version></white>
@@ -12,3 +16,15 @@ command:
     <gray>Java:</gray> <white><java></white>
   reload-success: "<prefix><green>Configuration reloaded.</green>"
   reload-failure: "<prefix><red>Reload failed. Check the console for details.</red>"
+  view-usage: "<prefix><gray>Usage:</gray> <white>/pn <player></white>"
+  view-header: "<prefix><white><player></white> <gray>-</gray> <white><count></white> <gray>active note(s),</gray> <white><critical></white> <gray>critical</gray>"
+  view-empty: "<prefix><gray>No active notes for</gray> <white><player></white><gray>.</gray>"
+  list-usage: "<prefix><gray>Usage:</gray> <white>/pn list <player></white>"
+  list-header: "<prefix><gray>Active notes for</gray> <white><player></white> <gray>(</gray><white><count></white><gray>)</gray>"
+  list-empty: "<prefix><gray>No active notes for</gray> <white><player></white><gray>.</gray>"
+  add-usage: "<prefix><gray>Usage:</gray> <white>/pn add <player> <note text></white>"
+  add-success: "<prefix><green>Created note</green> <white>#<id></white> <gray>for</gray> <white><player></white><gray>.</gray>"
+  archive-usage: "<prefix><gray>Usage:</gray> <white>/pn archive <id></white>"
+  archive-success: "<prefix><green>Archived note</green> <white>#<id></white><gray>.</gray>"
+  remove-usage: "<prefix><gray>Usage:</gray> <white>/pn remove <id></white>"
+  remove-success: "<prefix><green>Removed note</green> <white>#<id></white> <gray>permanently.</gray>"

@@ -1,9 +1,14 @@
 package de.codingplugs.playernotes;
 
+import de.codingplugs.playernotes.command.AddSubCommand;
+import de.codingplugs.playernotes.command.ArchiveSubCommand;
+import de.codingplugs.playernotes.command.ListSubCommand;
 import de.codingplugs.playernotes.command.PlayerNotesCommand;
 import de.codingplugs.playernotes.command.ReloadSubCommand;
+import de.codingplugs.playernotes.command.RemoveSubCommand;
 import de.codingplugs.playernotes.command.SubCommand;
 import de.codingplugs.playernotes.command.VersionSubCommand;
+import de.codingplugs.playernotes.command.ViewPlayerCommand;
 import de.codingplugs.playernotes.config.ConfigManager;
 import de.codingplugs.playernotes.database.DatabaseProvider;
 import de.codingplugs.playernotes.database.NoteRepository;
@@ -100,11 +105,16 @@ public final class PlayerNotesPlugin extends JavaPlugin {
         }
 
         List<SubCommand> subCommands = List.of(
+                new AddSubCommand(this, messageService),
+                new ListSubCommand(this, messageService),
+                new ArchiveSubCommand(this, messageService),
+                new RemoveSubCommand(this, messageService),
                 new VersionSubCommand(this, messageService),
                 new ReloadSubCommand(this, messageService)
         );
 
-        PlayerNotesCommand executor = new PlayerNotesCommand(messageService, subCommands);
+        ViewPlayerCommand viewPlayerCommand = new ViewPlayerCommand(this, messageService);
+        PlayerNotesCommand executor = new PlayerNotesCommand(messageService, subCommands, viewPlayerCommand);
         command.setExecutor(executor);
         command.setTabCompleter(executor);
     }
