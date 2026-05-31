@@ -7,7 +7,10 @@ C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\pla
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\gui\package-info.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\hook\package-info.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\listener\package-info.java
+C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\model\NotePriority.java
+C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\model\NoteType.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\model\package-info.java
+C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\model\PlayerNote.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\note\package-info.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\permission\Permissions.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\PlayerNotesPlugin.java

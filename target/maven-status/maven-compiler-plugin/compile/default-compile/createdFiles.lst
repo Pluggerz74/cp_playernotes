@@ -9,6 +9,9 @@ de\codingplugs\playernotes\command\ReloadSubCommand.class
 de\codingplugs\playernotes\config\ConfigManager.class
 de\codingplugs\playernotes\gui\package-info.class
 de\codingplugs\playernotes\scheduler\package-info.class
+de\codingplugs\playernotes\model\NotePriority.class
+de\codingplugs\playernotes\model\NoteType.class
+de\codingplugs\playernotes\model\PlayerNote.class
 de\codingplugs\playernotes\PlayerNotesPlugin.class
 de\codingplugs\playernotes\command\PlayerNotesCommand.class
 de\codingplugs\playernotes\database\package-info.class
