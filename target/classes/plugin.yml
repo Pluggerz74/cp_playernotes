@@ -1,5 +1,5 @@
 name: cp_playernotes
-version: '1.0.0'
+version: '0.9.0-beta'
 main: de.codingplugs.playernotes.PlayerNotesPlugin
 api-version: '1.19'
 description: Player notes for staff and administrators
