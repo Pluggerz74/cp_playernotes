@@ -14,6 +14,8 @@ import de.codingplugs.playernotes.database.DatabaseProvider;
 import de.codingplugs.playernotes.database.NoteRepository;
 import de.codingplugs.playernotes.database.SQLiteDatabaseProvider;
 import de.codingplugs.playernotes.database.SqlNoteRepository;
+import de.codingplugs.playernotes.gui.GuiClickListener;
+import de.codingplugs.playernotes.gui.GuiManager;
 import de.codingplugs.playernotes.service.MessageService;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,6 +32,7 @@ public final class PlayerNotesPlugin extends JavaPlugin {
     private MessageService messageService;
     private DatabaseProvider databaseProvider;
     private NoteRepository noteRepository;
+    private GuiManager guiManager;
 
     @Override
     public void onEnable() {
@@ -47,6 +50,7 @@ public final class PlayerNotesPlugin extends JavaPlugin {
             return;
         }
 
+        registerListeners();
         registerCommands();
 
         getLogger().info("PlayerNotes enabled.");
@@ -73,6 +77,10 @@ public final class PlayerNotesPlugin extends JavaPlugin {
 
     public NoteRepository notes() {
         return noteRepository;
+    }
+
+    public GuiManager guis() {
+        return guiManager;
     }
 
     private boolean initializeDatabase() {
@@ -113,10 +121,15 @@ public final class PlayerNotesPlugin extends JavaPlugin {
                 new ReloadSubCommand(this, messageService)
         );
 
-        ViewPlayerCommand viewPlayerCommand = new ViewPlayerCommand(this, messageService);
+        ViewPlayerCommand viewPlayerCommand = new ViewPlayerCommand(this, messageService, guiManager);
         PlayerNotesCommand executor = new PlayerNotesCommand(messageService, subCommands, viewPlayerCommand);
         command.setExecutor(executor);
         command.setTabCompleter(executor);
+    }
+
+    private void registerListeners() {
+        guiManager = new GuiManager(this);
+        getServer().getPluginManager().registerEvents(new GuiClickListener(guiManager), this);
     }
 
     public void logSevere(String message, Throwable throwable) {

@@ -1,6 +1,70 @@
-# GUI layout definitions for PlayerNotes
-# Menus will be configured here in future releases.
+# PlayerNotes GUI configuration
 
 notes-menu:
-  title: "<dark_gray>Player Notes</dark_gray>"
+  title: "<gradient:#ffffff:#60a5fa><bold>Player Notes</bold></gradient> <dark_gray>·</dark_gray> <gray><player></gray>"
   size: 54
+
+  materials:
+    border: WHITE_STAINED_GLASS_PANE
+    background: LIGHT_GRAY_STAINED_GLASS_PANE
+    accent: LIGHT_BLUE_STAINED_GLASS_PANE
+    player-profile: PLAYER_HEAD
+    stat-total: PAPER
+    stat-critical: RED_DYE
+    add-note: WRITABLE_BOOK
+    note-default: PAPER
+    note-warning: ORANGE_DYE
+    note-critical: RED_DYE
+    close: BARRIER
+    previous: ARROW
+    next: ARROW
+
+  slots:
+    player-profile: 10
+    total-notes: 12
+    critical-notes: 14
+    add-note: 16
+    note-start: 28
+    note-end: 34
+    previous: 45
+    close: 49
+    next: 53
+
+  labels:
+    player-profile-name: "<gradient:#60a5fa:#93c5fd><bold><player></bold></gradient>"
+    player-profile-lore:
+      - "<gray>Staff profile overview</gray>"
+      - "<blue>View active notes below</blue>"
+    total-name: "<white><bold>Total Notes</bold></white>"
+    total-lore:
+      - "<gray>Active notes for this player</gray>"
+      - ""
+      - "<aqua><count></aqua>"
+    critical-name: "<red><bold>Critical Notes</bold></red>"
+    critical-lore:
+      - "<gray>High-risk staff flags</gray>"
+      - ""
+      - "<red><count></red>"
+    add-name: "<gradient:#60a5fa:#93c5fd><bold>Add Note</bold></gradient>"
+    add-lore:
+      - "<gray>Create a new staff note</gray>"
+      - ""
+      - "<blue>Click to continue</blue>"
+    note-name: "<white><bold>#<id></bold></white> <gray>·</gray> <aqua><type></aqua> <dark_gray>/</dark_gray> <gray><priority></gray>"
+    note-critical-name: "<red><bold>#<id></bold></red> <gray>·</gray> <red><bold>CRITICAL</bold></red>"
+    note-lore:
+      - "<gray>By <white><staff></white></gray>"
+      - "<gray><date></gray>"
+      - ""
+      - "<white><content></white>"
+      - ""
+      - "<blue>Click to view details</blue>"
+    close-name: "<red><bold>Close</bold></red>"
+    close-lore:
+      - "<gray>Close this menu</gray>"
+    previous-name: "<gray><bold>Previous</bold></gray>"
+    previous-lore:
+      - "<dark_gray>Coming soon</dark_gray>"
+    next-name: "<gray><bold>Next</bold></gray>"
+    next-lore:
+      - "<dark_gray>Coming soon</dark_gray>"

@@ -29,3 +29,9 @@ command:
   archive-success: "<green>✔ Note #<id> archived.</green>"
   remove-usage: "<prefix><gray>Usage:</gray> <white>/pn remove <id></white>"
   remove-success: "<red>✔ Note #<id> permanently removed.</red>"
+
+gui:
+  console-no-gui: "<prefix><gray>Only players can open the notes GUI.</gray> <dark_gray>Use /pn list <player></dark_gray>"
+  add-placeholder: "<prefix><gray>Chat input will be added in the next update.</gray>"
+  pagination-placeholder: "<prefix><dark_gray>Pagination will be added in the next update.</dark_gray>"
+  note-detail: "<prefix><white>Note #<id></white> <gray>for</gray> <aqua><player></aqua> <dark_gray>(<type> · <priority>)</dark_gray> <white><content></white> <dark_gray>— <date> by <staff></dark_gray>"

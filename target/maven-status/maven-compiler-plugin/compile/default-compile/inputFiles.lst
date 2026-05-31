@@ -14,7 +14,10 @@ C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\pla
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\database\package-info.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\database\SQLiteDatabaseProvider.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\database\SqlNoteRepository.java
-C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\gui\package-info.java
+C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\gui\GuiClickListener.java
+C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\gui\GuiItemBuilder.java
+C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\gui\GuiManager.java
+C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\gui\PlayerNotesGui.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\hook\package-info.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\listener\package-info.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\model\NotePriority.java

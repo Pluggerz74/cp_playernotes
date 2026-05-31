@@ -1,6 +1,7 @@
 de\codingplugs\playernotes\database\SqlNoteRepository.class
 de\codingplugs\playernotes\hook\package-info.class
 de\codingplugs\playernotes\database\NoteRepository.class
+de\codingplugs\playernotes\gui\PlayerNotesGui.class
 de\codingplugs\playernotes\note\package-info.class
 de\codingplugs\playernotes\permission\Permissions.class
 de\codingplugs\playernotes\database\SQLiteDatabaseProvider.class
@@ -13,6 +14,8 @@ de\codingplugs\playernotes\PlayerNotesPlugin.class
 de\codingplugs\playernotes\command\PlayerNotesCommand.class
 de\codingplugs\playernotes\command\ListSubCommand.class
 de\codingplugs\playernotes\database\package-info.class
+de\codingplugs\playernotes\gui\PlayerNotesGui$ActionType.class
+de\codingplugs\playernotes\gui\GuiManager.class
 de\codingplugs\playernotes\model\package-info.class
 de\codingplugs\playernotes\command\VersionSubCommand.class
 de\codingplugs\playernotes\service\MessageService.class
@@ -20,13 +23,16 @@ de\codingplugs\playernotes\command\RemoveSubCommand.class
 de\codingplugs\playernotes\util\NoteFormatter.class
 de\codingplugs\playernotes\command\CommandSupport$StaffIdentity.class
 de\codingplugs\playernotes\database\SqlNoteRepository$SqlSupplier.class
+de\codingplugs\playernotes\gui\GuiClickListener$1.class
 de\codingplugs\playernotes\command\SubCommand.class
+de\codingplugs\playernotes\gui\GuiItemBuilder.class
 de\codingplugs\playernotes\command\AddSubCommand.class
 de\codingplugs\playernotes\database\DatabaseProvider.class
 de\codingplugs\playernotes\util\package-info.class
 de\codingplugs\playernotes\command\ReloadSubCommand.class
 de\codingplugs\playernotes\command\ViewPlayerCommand.class
-de\codingplugs\playernotes\gui\package-info.class
+de\codingplugs\playernotes\gui\GuiClickListener.class
+de\codingplugs\playernotes\gui\PlayerNotesGui$SlotAction.class
 de\codingplugs\playernotes\command\CommandSupport.class
 de\codingplugs\playernotes\model\NotePriority.class
 de\codingplugs\playernotes\listener\package-info.class
