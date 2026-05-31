@@ -2,6 +2,16 @@
 
 All notable changes to **PlayerNotes Pro** (`cp_playernotes`) are documented here.
 
+## [0.9.3-beta] — 2026-05-31
+
+### Added
+- Staff audit logging for note create, edit, archive, and delete actions
+- `/pn history <player>` command to view recent audit entries for a player
+- `player_notes_audit` table for SQLite and MySQL/MariaDB
+- Audit config options (`audit.enabled`, `audit.max-history-command-results`)
+- Audit log status in `/pn debug` output
+- `playernotes.history` permission
+
 ## [0.9.2-beta] — 2026-05-31
 
 ### Added
