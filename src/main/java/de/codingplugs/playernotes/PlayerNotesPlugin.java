@@ -10,9 +10,9 @@ import de.codingplugs.playernotes.command.SubCommand;
 import de.codingplugs.playernotes.command.VersionSubCommand;
 import de.codingplugs.playernotes.command.ViewPlayerCommand;
 import de.codingplugs.playernotes.config.ConfigManager;
+import de.codingplugs.playernotes.database.DatabaseFactory;
 import de.codingplugs.playernotes.database.DatabaseProvider;
 import de.codingplugs.playernotes.database.NoteRepository;
-import de.codingplugs.playernotes.database.SQLiteDatabaseProvider;
 import de.codingplugs.playernotes.database.SqlNoteRepository;
 import de.codingplugs.playernotes.gui.GuiClickListener;
 import de.codingplugs.playernotes.gui.GuiManager;
@@ -115,11 +115,15 @@ public final class PlayerNotesPlugin extends JavaPlugin {
     }
 
     private boolean initializeDatabase() {
-        databaseProvider = new SQLiteDatabaseProvider(this);
+        databaseProvider = DatabaseFactory.create(this);
         try {
             databaseProvider.initialize();
         } catch (SQLException exception) {
-            getLogger().log(Level.SEVERE, "Failed to initialize SQLite database", exception);
+            getLogger().log(
+                    Level.SEVERE,
+                    "Failed to initialize database (storage.type=" + DatabaseFactory.storageTypeLabel(this) + ")",
+                    exception
+            );
             return false;
         }
 

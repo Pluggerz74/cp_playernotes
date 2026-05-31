@@ -12,5 +12,9 @@ public interface DatabaseProvider {
 
     Connection connection() throws SQLException;
 
+    default boolean usesConnectionPool() {
+        return false;
+    }
+
     ExecutorService executor();
 }

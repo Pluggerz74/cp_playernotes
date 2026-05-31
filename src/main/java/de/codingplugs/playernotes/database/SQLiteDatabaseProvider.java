@@ -15,23 +15,7 @@ import java.util.logging.Logger;
 
 public final class SQLiteDatabaseProvider implements DatabaseProvider {
 
-    public static final String DATABASE_FILE = "playernotes.db";
-
-    private static final String CREATE_TABLE = """
-            CREATE TABLE IF NOT EXISTS player_notes (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                target_uuid TEXT NOT NULL,
-                target_name TEXT NOT NULL,
-                staff_uuid TEXT NOT NULL,
-                staff_name TEXT NOT NULL,
-                type TEXT NOT NULL,
-                priority TEXT NOT NULL,
-                content TEXT NOT NULL,
-                created_at TEXT NOT NULL,
-                updated_at TEXT NOT NULL,
-                archived INTEGER NOT NULL DEFAULT 0
-            )
-            """;
+    public static final String DEFAULT_DATABASE_FILE = "playernotes.db";
 
     private final PlayerNotesPlugin plugin;
     private final Logger logger;
@@ -54,14 +38,14 @@ public final class SQLiteDatabaseProvider implements DatabaseProvider {
             throw new SQLException("Could not create plugin data folder.");
         }
 
-        File databaseFile = new File(plugin.getDataFolder(), DATABASE_FILE);
+        File databaseFile = new File(plugin.getDataFolder(), databaseFileName());
         String jdbcUrl = "jdbc:sqlite:" + databaseFile.getAbsolutePath();
 
         connection = DriverManager.getConnection(jdbcUrl);
         connection.setAutoCommit(true);
 
         try (Statement statement = connection.createStatement()) {
-            statement.execute(CREATE_TABLE);
+            statement.execute(DatabaseSchema.SQLITE_CREATE_TABLE);
         }
 
         executor = Executors.newSingleThreadExecutor(runnable -> {
@@ -112,5 +96,14 @@ public final class SQLiteDatabaseProvider implements DatabaseProvider {
             throw new IllegalStateException("Database executor is not initialized.");
         }
         return executor;
+    }
+
+    private String databaseFileName() {
+        String configured = plugin.configManager().config().getString("storage.sqlite.file", DEFAULT_DATABASE_FILE);
+        if (configured == null || configured.isBlank()) {
+            return DEFAULT_DATABASE_FILE;
+        }
+
+        return configured.trim();
     }
 }

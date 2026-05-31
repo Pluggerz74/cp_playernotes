@@ -9,7 +9,10 @@ C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\pla
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\command\VersionSubCommand.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\command\ViewPlayerCommand.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\config\ConfigManager.java
+C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\database\DatabaseFactory.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\database\DatabaseProvider.java
+C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\database\DatabaseSchema.java
+C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\database\MySQLDatabaseProvider.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\database\NoteRepository.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\database\package-info.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\database\SQLiteDatabaseProvider.java

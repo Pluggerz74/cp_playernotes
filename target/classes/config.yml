@@ -3,6 +3,26 @@
 
 debug: false
 
+storage:
+  type: sqlite # sqlite, mysql
+
+  sqlite:
+    file: "playernotes.db"
+
+  mysql:
+    host: "localhost"
+    port: 3306
+    database: "playernotes"
+    username: "root"
+    password: ""
+    use-ssl: false
+    pool:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
 hooks:
   placeholderapi: true
 

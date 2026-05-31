@@ -12,9 +12,9 @@ de\codingplugs\playernotes\database\package-info.class
 de\codingplugs\playernotes\gui\PlayerNotesGui$ActionType.class
 de\codingplugs\playernotes\listener\ChatInputListener.class
 de\codingplugs\playernotes\hook\PlaceholderApiHook.class
+de\codingplugs\playernotes\database\MySQLDatabaseProvider.class
 de\codingplugs\playernotes\command\CommandSupport$StaffIdentity.class
 de\codingplugs\playernotes\gui\NoteDetailGui.class
-de\codingplugs\playernotes\database\SqlNoteRepository$SqlSupplier.class
 de\codingplugs\playernotes\gui\GuiClickListener$1.class
 de\codingplugs\playernotes\gui\GuiItemBuilder.class
 de\codingplugs\playernotes\hook\DiscordWebhookService.class
@@ -48,11 +48,14 @@ de\codingplugs\playernotes\command\VersionSubCommand.class
 de\codingplugs\playernotes\service\MessageService.class
 de\codingplugs\playernotes\command\RemoveSubCommand.class
 de\codingplugs\playernotes\util\NoteFormatter.class
+de\codingplugs\playernotes\database\SqlNoteRepository$SqlFunction.class
 de\codingplugs\playernotes\gui\NoteDetailGui$SlotAction.class
 de\codingplugs\playernotes\command\SubCommand.class
+de\codingplugs\playernotes\database\DatabaseSchema.class
 de\codingplugs\playernotes\gui\NoteTypeSelectGui$SlotAction.class
 de\codingplugs\playernotes\command\AddSubCommand.class
 de\codingplugs\playernotes\database\DatabaseProvider.class
 de\codingplugs\playernotes\util\package-info.class
 de\codingplugs\playernotes\gui\NoteDetailGui$ActionType.class
 de\codingplugs\playernotes\service\JoinAlertService.class
+de\codingplugs\playernotes\database\DatabaseFactory.class

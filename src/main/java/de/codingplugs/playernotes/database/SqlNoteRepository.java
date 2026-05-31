@@ -64,8 +64,7 @@ public final class SqlNoteRepository implements NoteRepository {
 
     @Override
     public CompletableFuture<PlayerNote> createNote(PlayerNote note) {
-        return supplyAsync(() -> {
-            Connection connection = databaseProvider.connection();
+        return supplyAsync(connection -> {
             try (PreparedStatement statement = connection.prepareStatement(INSERT_NOTE, Statement.RETURN_GENERATED_KEYS)) {
                 bindNoteForInsert(statement, note);
 
@@ -97,8 +96,7 @@ public final class SqlNoteRepository implements NoteRepository {
 
     @Override
     public CompletableFuture<Optional<PlayerNote>> findById(long id) {
-        return supplyAsync(() -> {
-            Connection connection = databaseProvider.connection();
+        return supplyAsync(connection -> {
             try (PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID)) {
                 statement.setLong(1, id);
 
@@ -114,12 +112,11 @@ public final class SqlNoteRepository implements NoteRepository {
 
     @Override
     public CompletableFuture<List<PlayerNote>> findByTarget(UUID targetUuid, boolean includeArchived) {
-        return supplyAsync(() -> {
+        return supplyAsync(connection -> {
             String query = includeArchived
                     ? SELECT_BY_TARGET + " ORDER BY created_at DESC"
                     : SELECT_BY_TARGET + " AND archived = 0 ORDER BY created_at DESC";
 
-            Connection connection = databaseProvider.connection();
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, targetUuid.toString());
 
@@ -136,8 +133,7 @@ public final class SqlNoteRepository implements NoteRepository {
 
     @Override
     public CompletableFuture<Boolean> archiveNote(long id) {
-        return supplyAsync(() -> {
-            Connection connection = databaseProvider.connection();
+        return supplyAsync(connection -> {
             try (PreparedStatement statement = connection.prepareStatement(ARCHIVE_NOTE)) {
                 statement.setString(1, Instant.now().toString());
                 statement.setLong(2, id);
@@ -148,8 +144,7 @@ public final class SqlNoteRepository implements NoteRepository {
 
     @Override
     public CompletableFuture<Boolean> deleteNote(long id) {
-        return supplyAsync(() -> {
-            Connection connection = databaseProvider.connection();
+        return supplyAsync(connection -> {
             try (PreparedStatement statement = connection.prepareStatement(DELETE_NOTE)) {
                 statement.setLong(1, id);
                 return statement.executeUpdate() > 0;
@@ -159,8 +154,7 @@ public final class SqlNoteRepository implements NoteRepository {
 
     @Override
     public CompletableFuture<Integer> countActiveNotes(UUID targetUuid) {
-        return supplyAsync(() -> {
-            Connection connection = databaseProvider.connection();
+        return supplyAsync(connection -> {
             try (PreparedStatement statement = connection.prepareStatement(COUNT_ACTIVE)) {
                 statement.setString(1, targetUuid.toString());
 
@@ -179,7 +173,7 @@ public final class SqlNoteRepository implements NoteRepository {
 
     @Override
     public CompletableFuture<Integer> countActiveNotesAtOrAbovePriority(UUID targetUuid, NotePriority minimumPriority) {
-        return supplyAsync(() -> {
+        return supplyAsync(connection -> {
             List<String> priorities = prioritiesAtOrAbove(minimumPriority);
             String placeholders = String.join(", ", priorities.stream().map(priority -> "?").toList());
             String query = """
@@ -188,7 +182,6 @@ public final class SqlNoteRepository implements NoteRepository {
                     WHERE target_uuid = ? AND archived = 0 AND priority IN (%s)
                     """.formatted(placeholders);
 
-            Connection connection = databaseProvider.connection();
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, targetUuid.toString());
                 for (int index = 0; index < priorities.size(); index++) {
@@ -213,14 +206,25 @@ public final class SqlNoteRepository implements NoteRepository {
         return priorities;
     }
 
-    private <T> CompletableFuture<T> supplyAsync(SqlSupplier<T> supplier) {
+    private <T> CompletableFuture<T> supplyAsync(SqlFunction<T> function) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                return supplier.get();
+                return withConnection(function);
             } catch (SQLException exception) {
                 throw new RuntimeException(exception);
             }
         }, databaseProvider.executor());
+    }
+
+    private <T> T withConnection(SqlFunction<T> function) throws SQLException {
+        Connection connection = databaseProvider.connection();
+        try {
+            return function.apply(connection);
+        } finally {
+            if (databaseProvider.usesConnectionPool()) {
+                connection.close();
+            }
+        }
     }
 
     private static void bindNoteForInsert(PreparedStatement statement, PlayerNote note) throws SQLException {
@@ -253,7 +257,7 @@ public final class SqlNoteRepository implements NoteRepository {
     }
 
     @FunctionalInterface
-    private interface SqlSupplier<T> {
-        T get() throws SQLException;
+    private interface SqlFunction<T> {
+        T apply(Connection connection) throws SQLException;
     }
 }
