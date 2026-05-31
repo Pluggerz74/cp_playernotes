@@ -1,17 +1,29 @@
-# cp_playernotes main configuration
-# Extended settings will be added in future releases.
+# PlayerNotes Pro — main configuration
+# Reload with /pn reload (storage.type changes require a full restart)
 
+# Log extra plugin diagnostics at FINE level when true
 debug: false
 
+# ---------------------------------------------------------------------------
+# Storage
+# ---------------------------------------------------------------------------
+# storage.type controls which database backend is used:
+#   sqlite  — single local file, no extra setup (recommended for small servers)
+#   mysql   — MySQL or MariaDB with connection pooling (recommended for networks)
+#
+# Switching storage.type does NOT migrate data automatically. Plan migrations
+# before changing backends on a live server.
 storage:
-  type: sqlite # sqlite, mysql
+  type: sqlite # sqlite, mysql, mariadb
 
   sqlite:
+    # Database file name inside plugins/cp_playernotes/
     file: "playernotes.db"
 
   mysql:
     host: "localhost"
     port: 3306
+    # The database must already exist — the plugin only creates tables
     database: "playernotes"
     username: "root"
     password: ""
@@ -23,19 +35,38 @@ storage:
       idle-timeout: 600000
       max-lifetime: 1800000
 
+# ---------------------------------------------------------------------------
+# Hooks (optional integrations)
+# ---------------------------------------------------------------------------
 hooks:
+  # Register PlaceholderAPI placeholders (%playernotes_*%)
+  # Set to false if PlaceholderAPI is not installed to avoid config warnings
   placeholderapi: true
 
+# ---------------------------------------------------------------------------
+# Join alerts
+# ---------------------------------------------------------------------------
+# Notify online staff when a player with high-risk notes joins the server
 join-alerts:
   enabled: true
+  # Minimum note priority to count as high-risk: LOW, NORMAL, HIGH, CRITICAL
   minimum-priority: HIGH
+  # Staff need this permission (or playernotes.admin) to receive alerts
   permission: "playernotes.notify"
 
+# ---------------------------------------------------------------------------
+# Discord webhooks
+# ---------------------------------------------------------------------------
+# Sends moderation event notifications to a Discord channel webhook
 discord:
   enabled: false
+  # Full webhook URL from Discord → Server Settings → Integrations → Webhooks
   webhook-url: ""
+  # Display name shown on Discord messages (max 80 characters)
   username: "PlayerNotes Pro"
+  # Optional avatar URL; leave blank to use Discord default
   avatar-url: ""
+  # Log the exact JSON payload to console when true (useful for debugging)
   debug-payload: false
   notify:
     note-created: true

@@ -1,3 +1,8 @@
+# PlayerNotes Pro — chat messages
+# Uses MiniMessage formatting: https://docs.advntr.dev/minimessage/format.html
+# Placeholders: <player>, <id>, <count>, etc. — see each message key
+
+# Prefix prepended to most command feedback (referenced as <prefix> in messages)
 prefix: "<gray>[</gray><aqua>PlayerNotes</aqua><gray>]</gray> "
 
 command:
@@ -29,6 +34,7 @@ command:
   archive-success: "<green>✔ Note #<id> archived.</green>"
   remove-usage: "<prefix><gray>Usage:</gray> <white>/pn remove <id></white>"
   remove-success: "<red>✔ Note #<id> permanently removed.</red>"
+  # /pn debug output (playernotes.admin)
   debug: |
     <gold><bold>PlayerNotes Diagnostics</bold></gold>
     <gray>Plugin:</gray> <white><plugin> v<version></white>
@@ -52,6 +58,7 @@ command:
   debug-discord-disabled: "disabled"
   debug-discord-enabled-configured: "enabled / configured"
   debug-discord-enabled-unconfigured: "enabled / not configured"
+  # /pn discordtest feedback (playernotes.admin)
   discordtest-sending: "<gray>Sending Discord webhook test...</gray>"
   discordtest-success: "<green>✔ Discord webhook test sent successfully.</green>"
   discordtest-http-failure: "<red>Discord webhook failed with HTTP <status>.</red>"
@@ -63,6 +70,7 @@ gui:
   pagination-placeholder: "<prefix><dark_gray>Pagination will be added in the next update.</dark_gray>"
   note-detail: "<prefix><white>Note #<id></white> <gray>for</gray> <aqua><player></aqua> <dark_gray>(<type> · <priority>)</dark_gray> <white><content></white> <dark_gray>— <date> by <staff></dark_gray>"
 
+# Messages shown during GUI note creation (chat input after type/priority select)
 chat-input:
   start: "<gray>Type your note in chat. Type <red>cancel</red> to cancel.</gray> <dark_gray>(<type> / <priority>)</dark_gray>"
   cancelled: "<red>Note creation cancelled.</red>"
@@ -70,6 +78,7 @@ chat-input:
   saved: "<green>✔ Note added for <white><player></white>.</green> <gray>ID: #<id></gray>"
   error: "<red>Something went wrong while saving the note. Check console.</red>"
 
+# Staff notifications when a flagged player joins
 join-alerts:
   staff-alert: "<red><bold>⚠ Staff Alert</bold></red> <gray><player> joined with <white><count></white> high-risk note(s).</gray>"
   staff-action: "<blue>Use /pn <player> to review notes.</blue>"

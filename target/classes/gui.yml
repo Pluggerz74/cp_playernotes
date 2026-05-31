@@ -1,9 +1,13 @@
-# PlayerNotes GUI configuration
+# PlayerNotes Pro — GUI configuration
+# All titles and labels support MiniMessage formatting
+# Placeholders: <player>, <id>, <type>, <priority>, <content>, <date>, <staff>, <count>
 
+# Main player notes overview (54-slot inventory)
 notes-menu:
   title: "<gradient:#ffffff:#60a5fa><bold>Player Notes</bold></gradient> <dark_gray>·</dark_gray> <gray><player></gray>"
   size: 54
 
+  # Bukkit material names — invalid names fall back to defaults and log a config warning
   materials:
     border: WHITE_STAINED_GLASS_PANE
     background: LIGHT_GRAY_STAINED_GLASS_PANE
@@ -19,6 +23,7 @@ notes-menu:
     previous: ARROW
     next: ARROW
 
+  # Inventory slot indices (0–53 for a 54-slot menu)
   slots:
     player-profile: 10
     total-notes: 12
@@ -69,6 +74,7 @@ notes-menu:
     next-lore:
       - "<dark_gray>Coming soon</dark_gray>"
 
+# Single note detail view (archive / delete actions)
 detail-menu:
   title: "<gradient:#ffffff:#60a5fa><bold>Note Details</bold></gradient> <dark_gray>·</dark_gray> <gray>#<id></gray>"
   size: 27
@@ -106,6 +112,7 @@ detail-menu:
     close-lore:
       - "<gray>Close this menu</gray>"
 
+# Step 1 of GUI note creation — select note type
 type-select-menu:
   title: "<gradient:#ffffff:#60a5fa><bold>Select Type</bold></gradient> <dark_gray>·</dark_gray> <gray><player></gray>"
   size: 27
@@ -130,6 +137,7 @@ type-select-menu:
     close-lore:
       - "<gray>Close this menu</gray>"
 
+# Step 2 of GUI note creation — select priority, then chat input
 priority-select-menu:
   title: "<gradient:#ffffff:#60a5fa><bold>Select Priority</bold></gradient> <dark_gray>·</dark_gray> <gray><player></gray>"
   size: 27
