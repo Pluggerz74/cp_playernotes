@@ -1,5 +1,6 @@
 package de.codingplugs.playernotes.database;
 
+import de.codingplugs.playernotes.model.NotePriority;
 import de.codingplugs.playernotes.model.PlayerNote;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface NoteRepository {
     CompletableFuture<Integer> countActiveNotes(UUID targetUuid);
 
     CompletableFuture<Integer> countCriticalNotes(UUID targetUuid);
+
+    CompletableFuture<Integer> countActiveNotesAtOrAbovePriority(UUID targetUuid, NotePriority minimumPriority);
 }

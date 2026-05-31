@@ -30,6 +30,9 @@ permissions:
   playernotes.reload:
     description: Reload plugin configuration
     default: op
+  playernotes.notify:
+    description: Receive join alerts for flagged players
+    default: op
   playernotes.admin:
     description: Full PlayerNotes administration
     default: op
@@ -40,3 +43,4 @@ permissions:
       playernotes.archive: true
       playernotes.remove: true
       playernotes.reload: true
+      playernotes.notify: true

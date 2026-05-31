@@ -17,7 +17,9 @@ import de.codingplugs.playernotes.database.SqlNoteRepository;
 import de.codingplugs.playernotes.gui.GuiClickListener;
 import de.codingplugs.playernotes.gui.GuiManager;
 import de.codingplugs.playernotes.listener.ChatInputListener;
+import de.codingplugs.playernotes.listener.StaffJoinListener;
 import de.codingplugs.playernotes.service.ChatInputService;
+import de.codingplugs.playernotes.service.JoinAlertService;
 import de.codingplugs.playernotes.service.MessageService;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -140,8 +142,11 @@ public final class PlayerNotesPlugin extends JavaPlugin {
     private void registerListeners() {
         guiManager = new GuiManager(this);
         chatInputService = new ChatInputService(this, guiManager);
+        JoinAlertService joinAlertService = new JoinAlertService(this);
+
         getServer().getPluginManager().registerEvents(new GuiClickListener(guiManager, chatInputService), this);
         getServer().getPluginManager().registerEvents(new ChatInputListener(this, chatInputService), this);
+        getServer().getPluginManager().registerEvents(new StaffJoinListener(joinAlertService), this);
     }
 
     public void logSevere(String message, Throwable throwable) {

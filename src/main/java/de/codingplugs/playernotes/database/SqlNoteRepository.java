@@ -56,12 +56,6 @@ public final class SqlNoteRepository implements NoteRepository {
             WHERE target_uuid = ? AND archived = 0
             """;
 
-    private static final String COUNT_CRITICAL = """
-            SELECT COUNT(*)
-            FROM player_notes
-            WHERE target_uuid = ? AND archived = 0 AND priority = ?
-            """;
-
     private final DatabaseProvider databaseProvider;
 
     public SqlNoteRepository(DatabaseProvider databaseProvider) {
@@ -180,11 +174,26 @@ public final class SqlNoteRepository implements NoteRepository {
 
     @Override
     public CompletableFuture<Integer> countCriticalNotes(UUID targetUuid) {
+        return countActiveNotesAtOrAbovePriority(targetUuid, NotePriority.CRITICAL);
+    }
+
+    @Override
+    public CompletableFuture<Integer> countActiveNotesAtOrAbovePriority(UUID targetUuid, NotePriority minimumPriority) {
         return supplyAsync(() -> {
+            List<String> priorities = prioritiesAtOrAbove(minimumPriority);
+            String placeholders = String.join(", ", priorities.stream().map(priority -> "?").toList());
+            String query = """
+                    SELECT COUNT(*)
+                    FROM player_notes
+                    WHERE target_uuid = ? AND archived = 0 AND priority IN (%s)
+                    """.formatted(placeholders);
+
             Connection connection = databaseProvider.connection();
-            try (PreparedStatement statement = connection.prepareStatement(COUNT_CRITICAL)) {
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, targetUuid.toString());
-                statement.setString(2, NotePriority.CRITICAL.name());
+                for (int index = 0; index < priorities.size(); index++) {
+                    statement.setString(index + 2, priorities.get(index));
+                }
 
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
@@ -192,6 +201,16 @@ public final class SqlNoteRepository implements NoteRepository {
                 }
             }
         });
+    }
+
+    private static List<String> prioritiesAtOrAbove(NotePriority minimumPriority) {
+        List<String> priorities = new ArrayList<>();
+        for (NotePriority priority : NotePriority.values()) {
+            if (priority.isAtLeast(minimumPriority)) {
+                priorities.add(priority.name());
+            }
+        }
+        return priorities;
     }
 
     private <T> CompletableFuture<T> supplyAsync(SqlSupplier<T> supplier) {

@@ -42,3 +42,7 @@ chat-input:
   timeout: "<red>Note creation timed out.</red>"
   saved: "<green>✔ Note added for <white><player></white>.</green> <gray>ID: #<id></gray>"
   error: "<red>Something went wrong while saving the note. Check console.</red>"
+
+join-alerts:
+  staff-alert: "<red><bold>⚠ Staff Alert</bold></red> <gray><player> joined with <white><count></white> high-risk note(s).</gray>"
+  staff-action: "<blue>Use /pn <player> to review notes.</blue>"

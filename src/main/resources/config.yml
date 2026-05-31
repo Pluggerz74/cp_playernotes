@@ -2,3 +2,8 @@
 # Extended settings will be added in future releases.
 
 debug: false
+
+join-alerts:
+  enabled: true
+  minimum-priority: HIGH
+  permission: "playernotes.notify"
