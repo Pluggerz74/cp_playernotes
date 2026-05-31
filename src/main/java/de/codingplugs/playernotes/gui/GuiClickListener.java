@@ -1,6 +1,9 @@
 package de.codingplugs.playernotes.gui;
 
+import de.codingplugs.playernotes.command.CommandSupport;
 import de.codingplugs.playernotes.model.PlayerNote;
+import de.codingplugs.playernotes.permission.Permissions;
+import de.codingplugs.playernotes.service.ChatInputService;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,9 +22,11 @@ public final class GuiClickListener implements Listener {
             .withZone(ZoneId.systemDefault());
 
     private final GuiManager guiManager;
+    private final ChatInputService chatInputService;
 
-    public GuiClickListener(GuiManager guiManager) {
+    public GuiClickListener(GuiManager guiManager, ChatInputService chatInputService) {
         this.guiManager = guiManager;
+        this.chatInputService = chatInputService;
     }
 
     @EventHandler
@@ -47,10 +52,20 @@ public final class GuiClickListener implements Listener {
 
         switch (action.type()) {
             case CLOSE -> player.closeInventory();
-            case ADD_NOTE -> guiManager.messages().send(player, "gui.add-placeholder");
+            case ADD_NOTE -> handleAddNote(player, menu);
             case PREVIOUS, NEXT -> guiManager.messages().send(player, "gui.pagination-placeholder");
             case NOTE -> handleNoteClick(player, menu, action.noteId());
         }
+    }
+
+    private void handleAddNote(Player player, PlayerNotesGui menu) {
+        if (!CommandSupport.hasPermission(player, Permissions.ADD)) {
+            guiManager.messages().send(player, "command.no-permission");
+            return;
+        }
+
+        player.closeInventory();
+        chatInputService.startInput(player, menu.targetUuid(), menu.targetName());
     }
 
     @EventHandler

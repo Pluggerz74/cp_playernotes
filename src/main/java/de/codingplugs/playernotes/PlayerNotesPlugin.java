@@ -16,6 +16,8 @@ import de.codingplugs.playernotes.database.SQLiteDatabaseProvider;
 import de.codingplugs.playernotes.database.SqlNoteRepository;
 import de.codingplugs.playernotes.gui.GuiClickListener;
 import de.codingplugs.playernotes.gui.GuiManager;
+import de.codingplugs.playernotes.listener.ChatInputListener;
+import de.codingplugs.playernotes.service.ChatInputService;
 import de.codingplugs.playernotes.service.MessageService;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,6 +35,7 @@ public final class PlayerNotesPlugin extends JavaPlugin {
     private DatabaseProvider databaseProvider;
     private NoteRepository noteRepository;
     private GuiManager guiManager;
+    private ChatInputService chatInputService;
 
     @Override
     public void onEnable() {
@@ -58,6 +61,9 @@ public final class PlayerNotesPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (chatInputService != null) {
+            chatInputService.shutdown();
+        }
         shutdownDatabase();
         getLogger().info("PlayerNotes disabled.");
     }
@@ -81,6 +87,10 @@ public final class PlayerNotesPlugin extends JavaPlugin {
 
     public GuiManager guis() {
         return guiManager;
+    }
+
+    public ChatInputService chatInput() {
+        return chatInputService;
     }
 
     private boolean initializeDatabase() {
@@ -129,7 +139,9 @@ public final class PlayerNotesPlugin extends JavaPlugin {
 
     private void registerListeners() {
         guiManager = new GuiManager(this);
-        getServer().getPluginManager().registerEvents(new GuiClickListener(guiManager), this);
+        chatInputService = new ChatInputService(this, guiManager);
+        getServer().getPluginManager().registerEvents(new GuiClickListener(guiManager, chatInputService), this);
+        getServer().getPluginManager().registerEvents(new ChatInputListener(this, chatInputService), this);
     }
 
     public void logSevere(String message, Throwable throwable) {

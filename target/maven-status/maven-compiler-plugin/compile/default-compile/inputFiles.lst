@@ -19,6 +19,7 @@ C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\pla
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\gui\GuiManager.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\gui\PlayerNotesGui.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\hook\package-info.java
+C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\listener\ChatInputListener.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\listener\package-info.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\model\NotePriority.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\model\NoteType.java
@@ -28,6 +29,7 @@ C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\pla
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\permission\Permissions.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\PlayerNotesPlugin.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\scheduler\package-info.java
+C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\service\ChatInputService.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\service\MessageService.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\util\NoteFormatter.java
 C:\Users\lucak\Desktop\CPPlugins\cp_playernotes\src\main\java\de\codingplugs\playernotes\util\package-info.java

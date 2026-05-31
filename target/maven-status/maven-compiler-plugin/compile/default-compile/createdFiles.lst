@@ -1,5 +1,6 @@
 de\codingplugs\playernotes\database\SqlNoteRepository.class
 de\codingplugs\playernotes\hook\package-info.class
+de\codingplugs\playernotes\service\ChatInputService.class
 de\codingplugs\playernotes\database\NoteRepository.class
 de\codingplugs\playernotes\gui\PlayerNotesGui.class
 de\codingplugs\playernotes\note\package-info.class
@@ -8,6 +9,7 @@ de\codingplugs\playernotes\database\SQLiteDatabaseProvider.class
 de\codingplugs\playernotes\config\ConfigManager.class
 de\codingplugs\playernotes\scheduler\package-info.class
 de\codingplugs\playernotes\command\ArchiveSubCommand.class
+de\codingplugs\playernotes\service\ChatInputService$PendingInput.class
 de\codingplugs\playernotes\model\NoteType.class
 de\codingplugs\playernotes\model\PlayerNote.class
 de\codingplugs\playernotes\PlayerNotesPlugin.class
@@ -18,6 +20,7 @@ de\codingplugs\playernotes\gui\PlayerNotesGui$ActionType.class
 de\codingplugs\playernotes\gui\GuiManager.class
 de\codingplugs\playernotes\model\package-info.class
 de\codingplugs\playernotes\command\VersionSubCommand.class
+de\codingplugs\playernotes\listener\ChatInputListener.class
 de\codingplugs\playernotes\service\MessageService.class
 de\codingplugs\playernotes\command\RemoveSubCommand.class
 de\codingplugs\playernotes\util\NoteFormatter.class
