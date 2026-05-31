@@ -17,6 +17,7 @@ de\codingplugs\playernotes\gui\NoteDetailGui.class
 de\codingplugs\playernotes\database\SqlNoteRepository$SqlSupplier.class
 de\codingplugs\playernotes\gui\GuiClickListener$1.class
 de\codingplugs\playernotes\gui\GuiItemBuilder.class
+de\codingplugs\playernotes\hook\DiscordWebhookService.class
 de\codingplugs\playernotes\command\ReloadSubCommand.class
 de\codingplugs\playernotes\command\ViewPlayerCommand.class
 de\codingplugs\playernotes\gui\NoteTypeSelectGui.class
@@ -30,6 +31,7 @@ de\codingplugs\playernotes\database\SqlNoteRepository.class
 de\codingplugs\playernotes\hook\package-info.class
 de\codingplugs\playernotes\service\ChatInputService.class
 de\codingplugs\playernotes\database\NoteRepository.class
+de\codingplugs\playernotes\hook\DiscordWebhookService$EmbedField.class
 de\codingplugs\playernotes\gui\GuiItemBuilder$1.class
 de\codingplugs\playernotes\gui\NotePrioritySelectGui.class
 de\codingplugs\playernotes\hook\HookManager.class

@@ -138,6 +138,8 @@ public final class ChatInputService {
                             "player", pending.targetName()
                     ));
 
+                    plugin.discord().notifyNoteCreated(created);
+
                     guiManager.reopenPlayerNotes(
                             staff,
                             pending.targetUuid(),

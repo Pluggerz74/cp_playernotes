@@ -133,6 +133,7 @@ public final class GuiManager {
                     }
 
                     messages.send(viewer, "command.archive-success", Map.of("id", String.valueOf(noteId)));
+                    plugin.discord().notifyNoteArchived(noteId, viewer.getName());
                     reopenPlayerNotes(viewer, detail.targetUuid(), detail.targetName(), detail.page());
                 }));
     }
@@ -153,6 +154,7 @@ public final class GuiManager {
                     }
 
                     messages.send(viewer, "command.remove-success", Map.of("id", String.valueOf(noteId)));
+                    plugin.discord().notifyNoteDeleted(noteId, viewer.getName());
                     reopenPlayerNotes(viewer, detail.targetUuid(), detail.targetName(), detail.page());
                 }));
     }

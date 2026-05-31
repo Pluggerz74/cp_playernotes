@@ -10,3 +10,15 @@ join-alerts:
   enabled: true
   minimum-priority: HIGH
   permission: "playernotes.notify"
+
+discord:
+  enabled: false
+  webhook-url: ""
+  username: "PlayerNotes Pro"
+  avatar-url: ""
+  notify:
+    note-created: true
+    critical-note-created: true
+    note-archived: true
+    note-deleted: true
+    flagged-player-join: true

@@ -55,6 +55,7 @@ public final class ArchiveSubCommand implements SubCommand {
                     }
 
                     messages.send(sender, "command.archive-success", Map.of("id", String.valueOf(noteId)));
+                    plugin.discord().notifyNoteArchived(noteId, CommandSupport.staffIdentity(sender).name());
                 }));
 
         return true;

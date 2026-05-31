@@ -55,6 +55,7 @@ public final class RemoveSubCommand implements SubCommand {
                     }
 
                     messages.send(sender, "command.remove-success", Map.of("id", String.valueOf(noteId)));
+                    plugin.discord().notifyNoteDeleted(noteId, CommandSupport.staffIdentity(sender).name());
                 }));
 
         return true;

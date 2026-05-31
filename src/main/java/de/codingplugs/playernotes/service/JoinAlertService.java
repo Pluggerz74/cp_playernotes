@@ -42,6 +42,7 @@ public final class JoinAlertService {
                     }
 
                     notifyStaff(joined, targetName, count);
+                    plugin.discord().notifyFlaggedPlayerJoin(targetName, count);
                 }));
     }
 

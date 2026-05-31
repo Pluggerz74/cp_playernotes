@@ -16,6 +16,7 @@ import de.codingplugs.playernotes.database.SQLiteDatabaseProvider;
 import de.codingplugs.playernotes.database.SqlNoteRepository;
 import de.codingplugs.playernotes.gui.GuiClickListener;
 import de.codingplugs.playernotes.gui.GuiManager;
+import de.codingplugs.playernotes.hook.DiscordWebhookService;
 import de.codingplugs.playernotes.hook.HookManager;
 import de.codingplugs.playernotes.listener.ChatInputListener;
 import de.codingplugs.playernotes.listener.StaffJoinListener;
@@ -40,6 +41,7 @@ public final class PlayerNotesPlugin extends JavaPlugin {
     private GuiManager guiManager;
     private ChatInputService chatInputService;
     private HookManager hookManager;
+    private DiscordWebhookService discordWebhookService;
 
     @Override
     public void onEnable() {
@@ -51,6 +53,7 @@ public final class PlayerNotesPlugin extends JavaPlugin {
 
         messageService = new MessageService(configManager);
         messageService.load();
+        discordWebhookService = new DiscordWebhookService(this);
 
         if (!initializeDatabase()) {
             getServer().getPluginManager().disablePlugin(this);
@@ -82,6 +85,9 @@ public final class PlayerNotesPlugin extends JavaPlugin {
         if (hookManager != null) {
             hookManager.reload();
         }
+        if (discordWebhookService != null) {
+            discordWebhookService.reload();
+        }
     }
 
     public ConfigManager configManager() {
@@ -102,6 +108,10 @@ public final class PlayerNotesPlugin extends JavaPlugin {
 
     public ChatInputService chatInput() {
         return chatInputService;
+    }
+
+    public DiscordWebhookService discord() {
+        return discordWebhookService;
     }
 
     private boolean initializeDatabase() {
