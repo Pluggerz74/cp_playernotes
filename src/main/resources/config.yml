@@ -55,6 +55,15 @@ join-alerts:
   permission: "playernotes.notify"
 
 # ---------------------------------------------------------------------------
+# Staff audit log
+# ---------------------------------------------------------------------------
+# Tracks staff actions (create, edit, archive, delete) for accountability
+audit:
+  enabled: true
+  # Maximum entries shown by /pn history <player>
+  max-history-command-results: 10
+
+# ---------------------------------------------------------------------------
 # Discord webhooks
 # ---------------------------------------------------------------------------
 # Sends moderation event notifications to a Discord channel webhook

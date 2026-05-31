@@ -166,6 +166,7 @@ public final class GuiManager {
                     }
 
                     messages.send(viewer, "command.archive-success", Map.of("id", String.valueOf(noteId)));
+                    plugin.audit().logNoteArchived(detail.note(), viewer.getUniqueId(), viewer.getName());
                     plugin.discord().notifyNoteArchived(noteId, viewer.getName());
                     reopenPlayerNotes(
                             viewer,
@@ -179,6 +180,7 @@ public final class GuiManager {
 
     public void deleteNoteFromGui(Player viewer, NoteDetailGui detail) {
         long noteId = detail.note().getId();
+        PlayerNote note = detail.note();
         plugin.notes().deleteNote(noteId).whenComplete((removed, error) ->
                 CommandSupport.deliverFeedback(plugin, viewer, messages, () -> {
                     if (error != null) {
@@ -193,6 +195,7 @@ public final class GuiManager {
                     }
 
                     messages.send(viewer, "command.remove-success", Map.of("id", String.valueOf(noteId)));
+                    plugin.audit().logNoteDeleted(note, viewer.getUniqueId(), viewer.getName());
                     plugin.discord().notifyNoteDeleted(noteId, viewer.getName());
                     reopenPlayerNotes(
                             viewer,

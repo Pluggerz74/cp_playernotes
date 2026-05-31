@@ -24,6 +24,7 @@ Staff moderation notes for Minecraft servers — track player history, flag high
 - **Storage** — SQLite (default) or MySQL/MariaDB with HikariCP connection pooling
 - **PlaceholderAPI** — Optional placeholders for note counts, flags, and latest note (cached, async)
 - **Discord webhooks** — Optional notifications for note create/archive/delete and flagged joins
+- **Staff audit log** — Tracks note create, edit, archive, and delete actions with `/pn history`
 - **Diagnostics** — `/pn debug`, `/pn discordtest`, and startup config sanity warnings
 
 ## Commands
@@ -36,6 +37,7 @@ Staff moderation notes for Minecraft servers — track player history, flag high
 | `/pn archive <id>` | Archive a note |
 | `/pn edit <id> <text>` | Update note content |
 | `/pn remove <id>` | Permanently delete a note |
+| `/pn history <player>` | Show latest staff audit entries for a player |
 | `/pn version` | Show plugin version |
 | `/pn reload` | Reload configuration |
 | `/pn debug` | Show diagnostics (`playernotes.admin`) |
@@ -53,6 +55,7 @@ Staff moderation notes for Minecraft servers — track player history, flag high
 | `playernotes.remove` | Delete notes | `op` |
 | `playernotes.reload` | Reload config | `op` |
 | `playernotes.notify` | Receive join alerts | `op` |
+| `playernotes.history` | View staff audit history | `op` |
 | `playernotes.admin` | Full access (debug, discordtest) | `op` |
 
 ---
@@ -207,7 +210,7 @@ The plugin connects to an **existing** database. It creates tables automatically
 
 | File | Purpose |
 |---|---|
-| `config.yml` | Storage, join alerts, Discord, hooks |
+| `config.yml` | Storage, join alerts, audit log, Discord, hooks |
 | `messages.yml` | Chat messages (MiniMessage format) |
 | `gui.yml` | GUI titles, materials, slots, labels |
 

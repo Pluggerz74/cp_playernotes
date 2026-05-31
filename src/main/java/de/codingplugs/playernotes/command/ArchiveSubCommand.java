@@ -41,6 +41,8 @@ public final class ArchiveSubCommand implements SubCommand {
             return true;
         }
 
+        CommandSupport.StaffIdentity staff = CommandSupport.staffIdentity(sender);
+
         plugin.notes().archiveNote(noteId).whenComplete((archived, error) ->
                 CommandSupport.deliverFeedback(plugin, sender, messages, () -> {
                     if (error != null) {
@@ -55,7 +57,8 @@ public final class ArchiveSubCommand implements SubCommand {
                     }
 
                     messages.send(sender, "command.archive-success", Map.of("id", String.valueOf(noteId)));
-                    plugin.discord().notifyNoteArchived(noteId, CommandSupport.staffIdentity(sender).name());
+                    plugin.audit().logNoteArchived(noteId, staff.uuid(), staff.name());
+                    plugin.discord().notifyNoteArchived(noteId, staff.name());
                 }));
 
         return true;

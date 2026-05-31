@@ -178,6 +178,7 @@ public final class ChatInputService {
                             "player", pending.targetName()
                     ));
 
+                    plugin.audit().logNoteCreated(created);
                     plugin.discord().notifyNoteCreated(created);
 
                     guiManager.reopenPlayerNotes(
@@ -214,6 +215,7 @@ public final class ChatInputService {
                     }
 
                     messages.send(staff, "chat-input.edit-saved", Map.of("id", String.valueOf(noteId)));
+                    plugin.audit().logNoteEdited(noteId, staff.getUniqueId(), staff.getName(), content);
 
                     guiManager.reopenAfterEdit(
                             staff,

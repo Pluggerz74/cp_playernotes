@@ -1,12 +1,14 @@
 package de.codingplugs.playernotes.command;
 
 import de.codingplugs.playernotes.PlayerNotesPlugin;
+import de.codingplugs.playernotes.model.PlayerNote;
 import de.codingplugs.playernotes.permission.Permissions;
 import de.codingplugs.playernotes.service.MessageService;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public final class RemoveSubCommand implements SubCommand {
 
@@ -41,7 +43,21 @@ public final class RemoveSubCommand implements SubCommand {
             return true;
         }
 
-        plugin.notes().deleteNote(noteId).whenComplete((removed, error) ->
+        CommandSupport.StaffIdentity staff = CommandSupport.staffIdentity(sender);
+
+        plugin.notes().findById(noteId).thenCompose(optionalNote -> {
+            if (optionalNote == null || optionalNote.isEmpty()) {
+                return CompletableFuture.completedFuture(false);
+            }
+
+            PlayerNote note = optionalNote.get();
+            return plugin.notes().deleteNote(noteId).thenApply(removed -> {
+                if (removed != null && removed) {
+                    plugin.audit().logNoteDeleted(note, staff.uuid(), staff.name());
+                }
+                return removed;
+            });
+        }).whenComplete((removed, error) ->
                 CommandSupport.deliverFeedback(plugin, sender, messages, () -> {
                     if (error != null) {
                         plugin.logSevere("Failed to remove note #" + noteId, error);
@@ -55,7 +71,7 @@ public final class RemoveSubCommand implements SubCommand {
                     }
 
                     messages.send(sender, "command.remove-success", Map.of("id", String.valueOf(noteId)));
-                    plugin.discord().notifyNoteDeleted(noteId, CommandSupport.staffIdentity(sender).name());
+                    plugin.discord().notifyNoteDeleted(noteId, staff.name());
                 }));
 
         return true;

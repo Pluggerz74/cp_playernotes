@@ -1,3 +1,4 @@
+de\codingplugs\playernotes\command\HistorySubCommand.class
 de\codingplugs\playernotes\gui\NotePrioritySelectGui$ActionType.class
 de\codingplugs\playernotes\command\EditSubCommand.class
 de\codingplugs\playernotes\gui\PlayerNotesGui.class
@@ -15,12 +16,14 @@ de\codingplugs\playernotes\command\ListSubCommand.class
 de\codingplugs\playernotes\database\package-info.class
 de\codingplugs\playernotes\gui\PlayerNotesGui$ActionType.class
 de\codingplugs\playernotes\listener\ChatInputListener.class
+de\codingplugs\playernotes\model\AuditAction.class
 de\codingplugs\playernotes\hook\PlaceholderApiHook.class
 de\codingplugs\playernotes\database\MySQLDatabaseProvider.class
 de\codingplugs\playernotes\command\CommandSupport$StaffIdentity.class
 de\codingplugs\playernotes\gui\NoteDetailGui.class
 de\codingplugs\playernotes\gui\GuiClickListener$1.class
 de\codingplugs\playernotes\gui\GuiItemBuilder.class
+de\codingplugs\playernotes\model\AuditLogEntry.class
 de\codingplugs\playernotes\hook\DiscordWebhookService.class
 de\codingplugs\playernotes\command\ReloadSubCommand.class
 de\codingplugs\playernotes\command\ViewPlayerCommand.class
@@ -29,6 +32,7 @@ de\codingplugs\playernotes\gui\GuiClickListener.class
 de\codingplugs\playernotes\gui\PlayerNotesGui$SlotAction.class
 de\codingplugs\playernotes\command\CommandSupport.class
 de\codingplugs\playernotes\model\NotePriority.class
+de\codingplugs\playernotes\database\SqlAuditLogRepository.class
 de\codingplugs\playernotes\gui\NotePrioritySelectGui$SlotAction.class
 de\codingplugs\playernotes\listener\package-info.class
 de\codingplugs\playernotes\database\SqlNoteRepository.class
@@ -40,6 +44,7 @@ de\codingplugs\playernotes\gui\GuiItemBuilder$1.class
 de\codingplugs\playernotes\gui\NotePrioritySelectGui.class
 de\codingplugs\playernotes\hook\HookManager.class
 de\codingplugs\playernotes\note\package-info.class
+de\codingplugs\playernotes\database\AuditLogRepository.class
 de\codingplugs\playernotes\config\ConfigSanityChecker.class
 de\codingplugs\playernotes\config\ConfigManager.class
 de\codingplugs\playernotes\scheduler\package-info.class
@@ -47,6 +52,7 @@ de\codingplugs\playernotes\service\ChatInputService$PendingInput.class
 de\codingplugs\playernotes\model\PlayerNote.class
 de\codingplugs\playernotes\PlayerNotesPlugin.class
 de\codingplugs\playernotes\command\PlayerNotesCommand.class
+de\codingplugs\playernotes\database\SqlAuditLogRepository$SqlFunction.class
 de\codingplugs\playernotes\gui\GuiManager.class
 de\codingplugs\playernotes\model\package-info.class
 de\codingplugs\playernotes\command\VersionSubCommand.class
@@ -63,6 +69,7 @@ de\codingplugs\playernotes\database\DatabaseProvider.class
 de\codingplugs\playernotes\service\DiagnosticsService.class
 de\codingplugs\playernotes\util\package-info.class
 de\codingplugs\playernotes\gui\NoteDetailGui$ActionType.class
+de\codingplugs\playernotes\service\AuditLogService.class
 de\codingplugs\playernotes\service\JoinAlertService.class
 de\codingplugs\playernotes\command\DiscordTestSubCommand.class
 de\codingplugs\playernotes\database\DatabaseFactory.class

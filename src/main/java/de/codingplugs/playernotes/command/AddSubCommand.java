@@ -88,6 +88,7 @@ public final class AddSubCommand implements SubCommand {
                             "id", String.valueOf(created.getId()),
                             "player", targetName
                     ));
+                    plugin.audit().logNoteCreated(created);
                     plugin.discord().notifyNoteCreated(created);
                 }));
 

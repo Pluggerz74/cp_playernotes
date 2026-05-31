@@ -5,6 +5,7 @@ import de.codingplugs.playernotes.command.DiscordTestSubCommand;
 import de.codingplugs.playernotes.command.EditSubCommand;
 import de.codingplugs.playernotes.command.AddSubCommand;
 import de.codingplugs.playernotes.command.ArchiveSubCommand;
+import de.codingplugs.playernotes.command.HistorySubCommand;
 import de.codingplugs.playernotes.command.ListSubCommand;
 import de.codingplugs.playernotes.command.PlayerNotesCommand;
 import de.codingplugs.playernotes.command.ReloadSubCommand;
@@ -14,9 +15,11 @@ import de.codingplugs.playernotes.command.VersionSubCommand;
 import de.codingplugs.playernotes.command.ViewPlayerCommand;
 import de.codingplugs.playernotes.config.ConfigManager;
 import de.codingplugs.playernotes.config.ConfigSanityChecker;
+import de.codingplugs.playernotes.database.AuditLogRepository;
 import de.codingplugs.playernotes.database.DatabaseFactory;
 import de.codingplugs.playernotes.database.DatabaseProvider;
 import de.codingplugs.playernotes.database.NoteRepository;
+import de.codingplugs.playernotes.database.SqlAuditLogRepository;
 import de.codingplugs.playernotes.database.SqlNoteRepository;
 import de.codingplugs.playernotes.gui.GuiClickListener;
 import de.codingplugs.playernotes.gui.GuiManager;
@@ -24,6 +27,7 @@ import de.codingplugs.playernotes.hook.DiscordWebhookService;
 import de.codingplugs.playernotes.hook.HookManager;
 import de.codingplugs.playernotes.listener.ChatInputListener;
 import de.codingplugs.playernotes.listener.StaffJoinListener;
+import de.codingplugs.playernotes.service.AuditLogService;
 import de.codingplugs.playernotes.service.ChatInputService;
 import de.codingplugs.playernotes.service.JoinAlertService;
 import de.codingplugs.playernotes.service.MessageService;
@@ -42,6 +46,8 @@ public final class PlayerNotesPlugin extends JavaPlugin {
     private MessageService messageService;
     private DatabaseProvider databaseProvider;
     private NoteRepository noteRepository;
+    private AuditLogRepository auditLogRepository;
+    private AuditLogService auditLogService;
     private GuiManager guiManager;
     private ChatInputService chatInputService;
     private HookManager hookManager;
@@ -116,6 +122,14 @@ public final class PlayerNotesPlugin extends JavaPlugin {
         return noteRepository;
     }
 
+    public AuditLogRepository auditLogs() {
+        return auditLogRepository;
+    }
+
+    public AuditLogService audit() {
+        return auditLogService;
+    }
+
     public GuiManager guis() {
         return guiManager;
     }
@@ -150,6 +164,8 @@ public final class PlayerNotesPlugin extends JavaPlugin {
         }
 
         noteRepository = new SqlNoteRepository(databaseProvider);
+        auditLogRepository = new SqlAuditLogRepository(databaseProvider);
+        auditLogService = new AuditLogService(this, auditLogRepository);
         return true;
     }
 
@@ -158,6 +174,8 @@ public final class PlayerNotesPlugin extends JavaPlugin {
             databaseProvider.shutdown();
             databaseProvider = null;
             noteRepository = null;
+            auditLogRepository = null;
+            auditLogService = null;
         }
     }
 
@@ -175,6 +193,7 @@ public final class PlayerNotesPlugin extends JavaPlugin {
                 new ArchiveSubCommand(this, messageService),
                 new EditSubCommand(this, messageService),
                 new RemoveSubCommand(this, messageService),
+                new HistorySubCommand(this, messageService),
                 new VersionSubCommand(this, messageService),
                 new ReloadSubCommand(this, messageService),
                 new DebugSubCommand(this, messageService),

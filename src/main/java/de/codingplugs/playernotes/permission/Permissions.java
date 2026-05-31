@@ -10,6 +10,7 @@ public final class Permissions {
     public static final String REMOVE = "playernotes.remove";
     public static final String RELOAD = "playernotes.reload";
     public static final String NOTIFY = "playernotes.notify";
+    public static final String HISTORY = "playernotes.history";
     public static final String ADMIN = "playernotes.admin";
 
     private Permissions() {

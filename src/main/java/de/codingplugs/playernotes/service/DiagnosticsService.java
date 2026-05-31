@@ -61,6 +61,7 @@ public final class DiagnosticsService {
         String placeholderApi = formatPlaceholderApiStatus(hooks, config);
         String discord = formatDiscordStatus(config);
         String joinAlerts = formatJoinAlertsStatus(config);
+        String audit = formatAuditStatus(config);
 
         return Map.ofEntries(
                 Map.entry("plugin", plugin.getDescription().getName()),
@@ -72,6 +73,7 @@ public final class DiagnosticsService {
                 Map.entry("placeholderapi", placeholderApi),
                 Map.entry("discord", discord),
                 Map.entry("join_alerts", joinAlerts),
+                Map.entry("audit", audit),
                 Map.entry("gui_config", isGuiConfigLoaded() ? messages.raw("command.debug-yes") : messages.raw("command.debug-no")),
                 Map.entry("messages_config", isMessagesConfigLoaded() ? messages.raw("command.debug-yes") : messages.raw("command.debug-no"))
         );
@@ -134,6 +136,13 @@ public final class DiagnosticsService {
                 : messages.raw("command.debug-disabled");
 
         return state + " (" + minimumPriority.name() + "+)";
+    }
+
+    private String formatAuditStatus(FileConfiguration config) {
+        boolean enabled = config.getBoolean("audit.enabled", true);
+        return enabled
+                ? messages.raw("command.debug-enabled")
+                : messages.raw("command.debug-disabled");
     }
 
     private boolean isGuiConfigLoaded() {

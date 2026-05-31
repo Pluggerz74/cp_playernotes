@@ -46,6 +46,7 @@ public final class SQLiteDatabaseProvider implements DatabaseProvider {
 
         try (Statement statement = connection.createStatement()) {
             statement.execute(DatabaseSchema.SQLITE_CREATE_TABLE);
+            statement.execute(DatabaseSchema.SQLITE_CREATE_AUDIT_TABLE);
         }
 
         executor = Executors.newSingleThreadExecutor(runnable -> {

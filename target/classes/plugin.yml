@@ -12,7 +12,7 @@ softdepend:
 commands:
   pn:
     description: PlayerNotes commands
-    usage: /<command> <player|add|list|archive|edit|remove|version|reload|debug|discordtest>
+    usage: /<command> <player|add|list|archive|edit|remove|history|version|reload|debug|discordtest>
 
 permissions:
   playernotes.use:
@@ -39,6 +39,9 @@ permissions:
   playernotes.notify:
     description: Receive join alerts for flagged players
     default: op
+  playernotes.history:
+    description: View staff audit history for a player
+    default: op
   playernotes.admin:
     description: Full PlayerNotes administration
     default: op
@@ -51,3 +54,4 @@ permissions:
       playernotes.remove: true
       playernotes.reload: true
       playernotes.notify: true
+      playernotes.history: true

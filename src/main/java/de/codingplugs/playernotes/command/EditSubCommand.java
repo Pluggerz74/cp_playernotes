@@ -47,6 +47,8 @@ public final class EditSubCommand implements SubCommand {
             return true;
         }
 
+        CommandSupport.StaffIdentity staff = CommandSupport.staffIdentity(sender);
+
         plugin.notes().updateNoteContent(noteId, content).whenComplete((updated, error) ->
                 CommandSupport.deliverFeedback(plugin, sender, messages, () -> {
                     if (error != null) {
@@ -61,6 +63,7 @@ public final class EditSubCommand implements SubCommand {
                     }
 
                     messages.send(sender, "command.edit-success", Map.of("id", String.valueOf(noteId)));
+                    plugin.audit().logNoteEdited(noteId, staff.uuid(), staff.name(), content);
                 }));
 
         return true;

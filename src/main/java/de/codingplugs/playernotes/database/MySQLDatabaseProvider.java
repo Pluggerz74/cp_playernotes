@@ -57,6 +57,7 @@ public final class MySQLDatabaseProvider implements DatabaseProvider {
             try (Connection connection = dataSource.getConnection();
                  Statement statement = connection.createStatement()) {
                 statement.execute(DatabaseSchema.MYSQL_CREATE_TABLE);
+                statement.execute(DatabaseSchema.MYSQL_CREATE_AUDIT_TABLE);
             }
         } catch (SQLException exception) {
             if (dataSource != null) {

@@ -6,7 +6,7 @@
 prefix: "<gray>[</gray><aqua>PlayerNotes</aqua><gray>]</gray> "
 
 command:
-  usage: "<prefix><gray>Usage:</gray> <white>/pn <player|add|list|archive|edit|remove|version|reload|debug|discordtest></white>"
+  usage: "<prefix><gray>Usage:</gray> <white>/pn <player|add|list|archive|edit|remove|history|version|reload|debug|discordtest></white>"
   unknown: "<prefix><red>Unknown subcommand.</red> <gray>Try</gray> <white>/pn version</white>"
   no-permission: "<prefix><red>You do not have permission to do that.</red>"
   error: "<prefix><red>Something went wrong. Check the console for details.</red>"
@@ -36,6 +36,10 @@ command:
   edit-success: "<green>✔ Note #<id> updated.</green>"
   remove-usage: "<prefix><gray>Usage:</gray> <white>/pn remove <id></white>"
   remove-success: "<red>✔ Note #<id> permanently removed.</red>"
+  history-usage: "<prefix><gray>Usage:</gray> <white>/pn history <player></white>"
+  history-header: "<prefix><gray>Audit history for</gray> <white><player></white> <gray>(latest <count>)</gray>"
+  history-empty: "<prefix><gray>No history found for</gray> <white><player></white><gray>.</gray>"
+  history-line: "<gray>#<id> <white><action></white> by <aqua><staff></aqua> <dark_gray>· <date></dark_gray>"
   # /pn debug output (playernotes.admin)
   debug: |
     <gold><bold>PlayerNotes Diagnostics</bold></gold>
@@ -47,6 +51,7 @@ command:
     <gray>PlaceholderAPI:</gray> <white><placeholderapi></white>
     <gray>Discord:</gray> <white><discord></white>
     <gray>Join alerts:</gray> <white><join_alerts></white>
+    <gray>Audit log:</gray> <white><audit></white>
     <gray>GUI config:</gray> <white><gui_config></white>
     <gray>Messages config:</gray> <white><messages_config></white>
   debug-notes: "<gray>Total notes:</gray> <white><total></white> <dark_gray>|</dark_gray> <gray>Active notes:</gray> <white><active></white>"
