@@ -5,10 +5,15 @@ import de.codingplugs.playernotes.command.ReloadSubCommand;
 import de.codingplugs.playernotes.command.SubCommand;
 import de.codingplugs.playernotes.command.VersionSubCommand;
 import de.codingplugs.playernotes.config.ConfigManager;
+import de.codingplugs.playernotes.database.DatabaseProvider;
+import de.codingplugs.playernotes.database.NoteRepository;
+import de.codingplugs.playernotes.database.SQLiteDatabaseProvider;
+import de.codingplugs.playernotes.database.SqlNoteRepository;
 import de.codingplugs.playernotes.service.MessageService;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -18,6 +23,8 @@ public final class PlayerNotesPlugin extends JavaPlugin {
 
     private ConfigManager configManager;
     private MessageService messageService;
+    private DatabaseProvider databaseProvider;
+    private NoteRepository noteRepository;
 
     @Override
     public void onEnable() {
@@ -30,6 +37,11 @@ public final class PlayerNotesPlugin extends JavaPlugin {
         messageService = new MessageService(configManager);
         messageService.load();
 
+        if (!initializeDatabase()) {
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
         registerCommands();
 
         getLogger().info("PlayerNotes enabled.");
@@ -37,6 +49,7 @@ public final class PlayerNotesPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        shutdownDatabase();
         getLogger().info("PlayerNotes disabled.");
     }
 
@@ -51,6 +64,31 @@ public final class PlayerNotesPlugin extends JavaPlugin {
 
     public MessageService messages() {
         return messageService;
+    }
+
+    public NoteRepository notes() {
+        return noteRepository;
+    }
+
+    private boolean initializeDatabase() {
+        databaseProvider = new SQLiteDatabaseProvider(this);
+        try {
+            databaseProvider.initialize();
+        } catch (SQLException exception) {
+            getLogger().log(Level.SEVERE, "Failed to initialize SQLite database", exception);
+            return false;
+        }
+
+        noteRepository = new SqlNoteRepository(databaseProvider);
+        return true;
+    }
+
+    private void shutdownDatabase() {
+        if (databaseProvider != null) {
+            databaseProvider.shutdown();
+            databaseProvider = null;
+            noteRepository = null;
+        }
     }
 
     private void registerCommands() {
