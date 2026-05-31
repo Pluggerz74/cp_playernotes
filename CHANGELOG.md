@@ -2,6 +2,23 @@
 
 All notable changes to **PlayerNotes Pro** (`cp_playernotes`) are documented here.
 
+## [1.0.0] — 2026-05-31
+
+First stable release.
+
+### Highlights
+- Staff notes with type and priority (Info, Warning, Suspect, Punishment, Staff / Low–Critical)
+- Apple-inspired GUI for browsing and managing notes
+- Note detail view with edit, archive, and delete actions
+- Add, edit, archive, and delete notes via commands and GUI
+- GUI pagination and archive filter (Active / Archived / All)
+- SQLite and MySQL/MariaDB storage with async database access
+- Staff join alerts for high-risk players
+- Discord webhook notifications (optional)
+- PlaceholderAPI placeholders (optional)
+- Staff audit logging with `/pn history`
+- `/pn debug` diagnostics and config sanity checks on startup and reload
+
 ## [0.9.3-beta] — 2026-05-31
 
 ### Added

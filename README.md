@@ -2,9 +2,9 @@
 
 Staff moderation notes for Minecraft servers — track player history, flag high-risk joins, and keep your team aligned with a polished GUI and optional integrations.
 
-**Current beta:** `0.9.3-beta`
+**Current version:** `1.0.0`
 
-> **Beta status:** This release is intended for testing on Paper, Purpur, and Spigot (1.19.4 – 1.21.x). Features and configuration may change before a stable release. Please report issues with `/pn debug` output and relevant console logs.
+> **Support:** PlayerNotes Pro runs on Paper, Purpur, and Spigot (1.19.4 – 1.21.x, Java 17+). If you run into issues, include `/pn debug` output and relevant console logs when reporting them.
 
 ## Requirements
 
@@ -17,7 +17,7 @@ Staff moderation notes for Minecraft servers — track player history, flag high
 ## Features
 
 - **Player notes** — Add notes with type (Info, Warning, Suspect, Punishment, Staff) and priority (Low, Normal, High, Critical)
-- **Staff GUI** — Inventory menus to browse, view details, archive, and delete notes
+- **Staff GUI** — Apple-inspired inventory menus to browse, paginate, filter, and manage notes
 - **Note creation flow** — Select type → priority → chat input (cancel or 60s timeout)
 - **Commands** — Full `/pn` command set for console and in-game staff
 - **Join alerts** — Notify staff when flagged players join (configurable minimum priority)
@@ -60,12 +60,12 @@ Staff moderation notes for Minecraft servers — track player history, flag high
 
 ---
 
-## Beta testing
+## Installation & setup
 
 ### Installation
 
-1. Build the plugin (see [Build](#build)) or use a provided beta JAR.
-2. Copy `cp_playernotes-0.9.3-beta.jar` into your server's `plugins/` folder.
+1. Build the plugin (see [Build](#build)) or use a provided release JAR.
+2. Copy `cp_playernotes-1.0.0.jar` into your server's `plugins/` folder.
 3. Start the server once to generate default config files.
 4. Stop the server, edit configuration (see checklist below), then start again — or use `/pn reload` after editing live configs.
 
@@ -224,7 +224,7 @@ From the project root:
 mvn clean package
 ```
 
-Output: `target/cp_playernotes-0.9.3-beta.jar`
+Output: `target/cp_playernotes-1.0.0.jar`
 
 If Maven is not on your PATH:
 

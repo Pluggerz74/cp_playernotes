@@ -6,7 +6,7 @@
 
     <groupId>de.codingplugs</groupId>
     <artifactId>cp_playernotes</artifactId>
-    <version>0.9.3-beta</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>cp_playernotes</name>
